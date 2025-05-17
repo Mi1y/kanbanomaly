@@ -10,5 +10,5 @@
 
 
 <section class="p-4 text-center text-sm text-gray-500">
-            Made by Mi1y, with help from AI 🤖
+        💻 Made by Mi1y
 </section>
