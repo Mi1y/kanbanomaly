@@ -1,12 +1,11 @@
 <!-- Display the component only if end_date is provided, otherwise do not display it -->
 {#if newProjectStartDate && newProjectEndDate }
-<div class="bg-black text-white text-center font-mono pt-12">
+<div class="bg-gray text-center font-mono pt-12">
     <h1 class="text-2xl font-bold">Deadline Loading</h1>
   
     <div class="relative my-10 mx-auto w-4/5 h-8 bg-white rounded-full overflow-hidden">
       <div
-        class="absolute top-0 left-0 bg-red-500 bg-opacity-50 transition-all duration-1000 h-full"
-        style="width: {maskWidth}%"
+      class="absolute top-0 left-0 bg-red-500 bg-opacity-50 transition-all duration-1000 h-full border border-red-700"        style="width: {maskWidth}%"
         style:z-index="0"
       ></div>
   
