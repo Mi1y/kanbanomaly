@@ -1,7 +1,11 @@
 <script lang="ts">
-	import "../app.css";
+  import "../app.css";
 </script>
 
-<div class="min-h-screen bg-gray-100 text-gray-900 font-sans">
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white font-sans antialiased">
   <slot />
 </div>
+
+<style>
+
+</style>
