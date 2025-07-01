@@ -1,17 +1,15 @@
 <script lang="ts">
-  import { supabase } from '$lib/database/supabase';
-  import type { Project } from '$lib/interfaces/projects';
-
-  let {
-    isOpen = $bindable(),
-    onProjectCreated,
-    onClose,
-    projectEdit = null
-  } = $props<{
-    isOpen?: Boolean;
-    onProjectCreated?: (project: Project) => void;
+  import type { 
+    CreateProjectData, 
+    UpdateProjectData, 
+    ProjectView 
+  } from '$lib/features';
+  
+  let {isOpen = $bindable(), onProjectCreated, onClose, projectEdit = null} = $props<{
+    isOpen?: boolean;
+    onProjectCreated?: (data: CreateProjectData | UpdateProjectData) => void;
     onClose?: () => void;
-    projectEdit?: Project | null;
+    projectEdit?: ProjectView | null;
   }>();
 
   let newProjectTitle = $state('');
@@ -34,51 +32,19 @@
     }
   });
 
-  async function saveProject() {
-    if (!newProjectTitle.trim()) {
-      alert("Project title is required");
-      return;
-    }
-
-    if (projectEdit) {
-      const { error } = await supabase
-        .from('projects')
-        .update({
-          title: newProjectTitle,
-          start_date: newProjectStartDate ? new Date(newProjectStartDate).toISOString() : null,
-          end_date: newProjectEndDate ? new Date(newProjectEndDate).toISOString() : null
-        })
-        .eq('id', projectEdit.id);
-
-      if (error) {
-        alert("Failed to update project");
-      } else {
-        onProjectCreated?.({
-          ...projectEdit,
-          title: newProjectTitle,
-          start_date: newProjectStartDate,
-          end_date: newProjectEndDate
-        });
-        resetForm();
-      }
-    } else {
-      const { data, error } = await supabase
-        .from('projects')
-        .insert([{
-          title: newProjectTitle,
-          start_date: newProjectStartDate ? new Date(newProjectStartDate).toISOString() : null,
-          end_date: newProjectEndDate ? new Date(newProjectEndDate).toISOString() : null
-        }])
-        .select();
-
-      if (error) {
-        alert("Failed to create project");
-      } else {
-        onProjectCreated?.(data[0]);
-        resetForm();
-      }
-    }
+async function saveProject() {
+  try {
+    const projectData = {
+      title: newProjectTitle,
+      start_date: newProjectStartDate ? new Date(newProjectStartDate).toISOString() : null,
+      end_date: newProjectEndDate ? new Date(newProjectEndDate).toISOString() : null
+    };
+    onProjectCreated?.(projectData);
+  } catch (error) {
+    console.error('Error preparing project data:', error);
+    alert("Failed to prepare project data");
   }
+}
 
   function resetForm() {
     newProjectTitle = '';

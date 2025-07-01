@@ -1,36 +1,27 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { supabase } from '$lib/database/supabase';
   import ProjectModal from '../modal/project_modal.svelte';
-  import type { Project } from '$lib/interfaces/projects';
+  import { 
+  projectList, 
+  selectedProjectId, 
+  projectActions,
+  type CreateProjectData,
+  type UpdateProjectData,
+  type ProjectView,
+  type ProjectSummary
 
-  let {
-    selectedProjectId = $bindable(),
-    onProjectSelect
-  } = $props<{
-    selectedProjectId: number | null
-    onProjectSelect?: (projectId: number) => void;
-  }>();
+} from '$lib/features';
 
-  let projects = $state<Project[]>([]);
   let newProjectModalOpen = $state(false);
-  let projectToEdit: Project | null = $state(null);
-
-  async function loadProjects() {
-    const { data, error } = await supabase.from("projects").select("*");
-    if (error) {
-      console.error("Error loading projects", error);
-      return;
-    }
-    projects = data;
-  }
+  let projectToEdit: ProjectView | null = $state(null);
 
   function selectProject(projectId: number) {
-    onProjectSelect?.(projectId)
+    projectActions.select(projectId);
   }
 
-  function startEditProject(project: Project) {
-    projectToEdit = project;
+  async function startEditProject(project: ProjectSummary) {
+    const fullProject = await projectActions.getById(project.id)
+    projectToEdit = fullProject;
     newProjectModalOpen = true;
   }
 
@@ -44,52 +35,40 @@
     projectToEdit = null;
   }
 
-function handleProjectCreatedOrEdited(project: Project) {
-  const isEdit = projectToEdit;
-
-  if (isEdit) {
-    projects = projects.map(p => p.id === project.id ? project : p);
-  } else {
-    projects = [...projects, project];
-    onProjectSelect?.(project.id);
+  async function handleProjectCreatedOrEdited(project: any) {
+    if (projectToEdit) {
+        const updates: UpdateProjectData = {
+            title: project.title,
+            start_date: project.start_date,
+            end_date: project.end_date
+        };
+        await projectActions.update(projectToEdit.id, updates);
+    } else {
+        const data: CreateProjectData = {
+            title: project.title,
+            start_date: project.start_date,
+            end_date: project.end_date
+        };
+        const newProject = await projectActions.create(data);
+        projectActions.select(newProject.id);
+    }
+    closeNewProjectModal();
   }
-
-  closeNewProjectModal();
-}
   async function deleteProject(projectId: number) {
-    if (!confirm('Are you sure you want to delete this project? All tasks will also be deleted.')) return;
-
-    const { error: tasksError } = await supabase
-      .from('tasks')
-      .delete()
-      .eq('project_id', projectId);
-
-    if (tasksError) {
-      console.error("Error deleting project tasks", tasksError);
-      alert("Failed to delete project tasks");
-      return;
-    }
-
-    const { error: projectError } = await supabase
-      .from('projects')
-      .delete()
-      .eq('id', projectId);
-
-    if (projectError) {
-      console.error("Error deleting project", projectError);
-      alert("Failed to delete project");
-      return;
-    }
-
-    projects = projects.filter(project => project.id !== projectId);
-
-    if (selectedProjectId === projectId) {
-      onProjectSelect?.(null)
-    }
+      if (!confirm('Are you sure?')) return;
+      
+      try {
+          await projectActions.delete(projectId);
+          if ($selectedProjectId === projectId) {
+              projectActions.select(null); 
+          }
+      } catch (error) {
+          alert("Failed to delete project");
+      }
   }
 
   onMount(() => {
-    loadProjects();
+    projectActions.loadAll();
   });
 </script>
 
@@ -119,18 +98,19 @@ function handleProjectCreatedOrEdited(project: Project) {
 
   <div class="flex-1 z-10">
     <h3 class="text-xs font-semibold mb-3 uppercase tracking-wider">Projects</h3>
-    {#if projects.length > 0}
+    {#if $projectList.length > 0}
       <ul class="space-y-1">
-        {#each projects as project}
+        {#each $projectList as project}
           <li class="group relative">
             <div class="flex rounded-lg overflow-hidden">
               
               <button 
-                class="flex-1 text-left px-3 py-3 transition-all duration-150 {selectedProjectId === project.id ? 'bg-gradient-to-r from-purple-600/60 to-pink-600/60 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white'}"
+                class="flex-1 text-left px-3 py-3 transition-all duration-150 {$selectedProjectId === project.id ? 'bg-gradient-to-r from-purple-600/60 to-pink-600/60 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white'}"
                 onclick={() => selectProject(project.id)}
+                type="button"
               >
                 <div class="flex items-center gap-2">
-                  <div class="w-2 h-2 rounded-full {selectedProjectId === project.id ? 'bg-white' : 'bg-purple-400'} opacity-60"></div>
+                  <div class="w-2 h-2 rounded-full {$selectedProjectId === project.id ? 'bg-white' : 'bg-purple-400'} opacity-60"></div>
                   {project.title}
                 </div>
               </button>

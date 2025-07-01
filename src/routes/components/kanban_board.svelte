@@ -1,25 +1,32 @@
 <script lang="ts">
-import { projectStore, selectedProject } from '$lib/stores/projectStore';
-import { tasks, tasksLoading, taskStore } from '$lib/stores/taskStore';
-import type { Task } from '$lib/interfaces/tasks';
+// Internal state
+import { 
+  selectedProject, 
+  selectedProjectId,
+  projectActions,
+  taskColumns, 
+  tasksLoading, 
+  taskActions,
+  type CreateTaskData,
+  type TaskStatus,
+  type TaskLevel,
+  type TaskView
+} from '$lib/features';
 import DeadlineBar from './deadline_bar.svelte';
 
-// export let selectedProjectId: number | null = null;
-
-let { selectedProjectId = $bindable() } : { selectedProjectId: number | null } = $props();
 
 let newTaskTitle = $state('');
-let newTaskStatus = $state('todo');
-let newTaskLevel = $state('medium');
+let newTaskStatus = $state<TaskStatus>('todo');
+let newTaskLevel = $state<TaskLevel>('medium');
 
 let editingTaskId = $state<number | null>(null);
 let editTaskTitle = $state('');
-let editTaskLevel = $state(''); 
+let editTaskLevel = $state<TaskLevel>('medium'); 
 
 // Drag & drop
-let draggedTask = $state<Task | null>(null);
-let dragSourceColumn = $state<string | null>(null);
-let dragOverColumn = $state<string | null>(null);
+let draggedTaskId = $state<number | null>(null);
+let dragSourceColumn = $state<TaskStatus | null>(null);  
+let dragOverColumn = $state<TaskStatus | null>(null); 
 
 function formatDate(dateStr: string | null): string {
     if (!dateStr) return '';
@@ -31,23 +38,23 @@ async function addNewTask() {
     if (!newTaskTitle.trim() || !selectedProjectId) return;
     
     try {
-    await taskStore.createTask({
-        title: newTaskTitle,
-        status: newTaskStatus,
-        level: newTaskLevel,
-        project_id: selectedProjectId
-    });
-    
-    newTaskTitle = '';
+        const data: CreateTaskData = {
+            title: newTaskTitle,
+            status: newTaskStatus,
+            level: newTaskLevel,
+            project_id: $selectedProjectId
+        };
+        await taskActions.create(data);
+        newTaskTitle = '';
     } catch (error) {
-    alert("Failed to add task");
+        alert("Failed to add task");
     }
 }
 
-function startEditTask(task: Task) {
+function startEditTask(task: TaskView) {
     editingTaskId = task.id;
     editTaskTitle = task.title;
-    editTaskLevel = task.level || 'medium';
+    editTaskLevel = task.level;
 }
 
 async function saveTaskEdit() {
@@ -57,14 +64,14 @@ async function saveTaskEdit() {
     }
     
     try {
-    await taskStore.updateTask(editingTaskId, {
+    await taskActions.update(editingTaskId, {
         title: editTaskTitle,
         level: editTaskLevel
     });
     
     editingTaskId = null;
     editTaskTitle = '';
-    editTaskLevel = '';
+    editTaskLevel = 'medium';
     } catch (error) {
     alert("Failed to update task");
     }
@@ -73,21 +80,21 @@ async function saveTaskEdit() {
 function cancelTaskEdit() {
     editingTaskId = null;
     editTaskTitle = '';
-    editTaskLevel = '';
+    editTaskLevel = 'medium';
 }
 
 async function deleteTask(taskId: number) {
     if (!confirm('Are you sure you want to delete this task?')) return;
     
     try {
-    await taskStore.deleteTask(taskId);
+    await taskActions.delete(taskId);
     } catch (error) {
     alert("Failed to delete task");
     }
 }
 
-function handleDragStart(task: Task, statusColumnKey: string) {
-    draggedTask = task;
+function handleDragStart(taskId: number, statusColumnKey: TaskStatus) {
+    draggedTaskId = taskId;
     dragSourceColumn = statusColumnKey;
 }
 
@@ -95,23 +102,27 @@ function handleDragOver(event: DragEvent) {
     event.preventDefault();
 }
 
-async function handleDrop(targetColId: string) {
-    if (draggedTask && dragSourceColumn && dragSourceColumn !== targetColId) {
-      try {
-          await taskStore.moveTask(draggedTask.id, dragSourceColumn, targetColId);
-      } catch (error) {
-          alert("Failed to move task");
-      }
+async function handleDrop(targetColId: TaskStatus) {
+    if (draggedTaskId && dragSourceColumn && dragSourceColumn !== targetColId) {
+        try {
+            await taskActions.move(draggedTaskId, dragSourceColumn, targetColId);
+        } catch (error) {
+            alert("Failed to move task");
+        }
     }
-    draggedTask = null;
+    draggedTaskId = null;
     dragSourceColumn = null;
+}
+function handleDragLeave(event: DragEvent) {
+    if (event.currentTarget && !(event.currentTarget as HTMLElement).contains(event.relatedTarget as Node)) {
+      dragOverColumn = null;
+    }
 }
 
 $effect(() => { 
-  if (selectedProjectId) {
-    projectStore.selectProject(selectedProjectId);
-    taskStore.loadTasksForProject(selectedProjectId);
-  }
+    if ($selectedProjectId) {
+        taskActions.loadForProject($selectedProjectId);
+    }
 });
 </script>
 
@@ -184,6 +195,7 @@ $effect(() => {
           <button
             onclick={addNewTask}
             class="bg-gradient-to-r from-cyan-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-cyan-500 hover:to-purple-500 transition-all duration-300 transform hover:scale-105 font-medium"
+            type="button"
           >
             Deploy Task
           </button>
@@ -193,18 +205,14 @@ $effect(() => {
   
     <!-- Kanban Columns -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {#each Object.entries($tasks) as [statusColumnKey, columnTasks]}
+      {#each Object.entries($taskColumns) as [statusColumnKey, columnTasks]}
     <div class={`bg-slate-800/40 rounded-xl border border-slate-700/50 overflow-hidden relative group transition-all duration-200
         ${dragOverColumn === statusColumnKey ? 'ring-4 ring-cyan-400/40 border-cyan-400/60 shadow-xl scale-[1.02]' : ''}
       `}
       role="group"
-      ondragover={(e) => { handleDragOver(e); dragOverColumn = statusColumnKey; }}
-      ondragleave={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-          dragOverColumn = null;
-        }
-      }}
-      ondrop={() => { handleDrop(statusColumnKey); dragOverColumn = null; }}
+      ondragover={(e) => { handleDragOver(e); dragOverColumn = statusColumnKey as TaskStatus; }}
+      ondragleave={handleDragLeave}
+      ondrop={() => { handleDrop(statusColumnKey as TaskStatus); dragOverColumn = null; }}
       >
           <div class="p-4 border-b border-slate-700/50 bg-gradient-to-r {
             statusColumnKey === 'todo' ? 'from-yellow-600/20 to-orange-600/20' : 
@@ -242,7 +250,7 @@ $effect(() => {
                   'bg-gradient-to-br from-emerald-500/10 to-green-500/10 hover:from-emerald-500/20 hover:to-green-500/20'
                 } group/task`}
                 draggable="true"
-                ondragstart={() => handleDragStart(task, statusColumnKey)}
+                ondragstart={() => handleDragStart(task.id, statusColumnKey as TaskStatus)}
                 role="button"
                 tabindex="0"
               >
@@ -285,7 +293,7 @@ $effect(() => {
                       </button>
                     </div>
                   {:else}
-                    <div class="flex-1">
+                    <div class="flex-1 min-w-0">
                       <div class="font-semibold mb-2">
                         {task.title}
                       </div>
@@ -305,7 +313,7 @@ $effect(() => {
                       </div>
                     </div>
                     
-                    <div class="flex gap-1 ml-3 opacity-0 group-hover/task:opacity-100 transition-opacity">
+                    <div class="flex gap-1 flex-shrink-0 opacity-0 group-hover/task:opacity-100 transition-opacity">
                       <button
                         onclick={() => startEditTask(task)}
                         class="text-cyan-400 p-2 hover:text-cyan-300 hover:bg-cyan-400/10 rounded transition-all"
@@ -349,12 +357,12 @@ $effect(() => {
     
   <div class="mt-8">
     <DeadlineBar 
-      newProjectStartDate={$selectedProject?.start_date} 
-      newProjectEndDate={$selectedProject?.end_date}
+      newProjectStartDate={$selectedProject.start_date} 
+      newProjectEndDate={$selectedProject.end_date}
     />
   </div>
   
-  {:else if selectedProjectId}
+  {:else if $selectedProjectId}
   <div class="flex justify-center items-center h-64">
     <div class="text-center">
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400 mx-auto mb-4"></div>

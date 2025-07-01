@@ -1,17 +1,12 @@
 <script lang="ts">
 import KanbanBoard from '../kanban_board.svelte';
-
-  let { selectedProjectId } = $props <{
-      selectedProjectId: number | null;
-  }>();
-
-
+import { selectedProjectId } from '$lib/features';
 </script>
 
 <div class="flex-1 overflow-y-auto bg-slate-900/50 custom-scrollbar">
   <main class="p-6 relative">
-    {#if selectedProjectId}
-      <KanbanBoard {selectedProjectId} />
+    {#if $selectedProjectId}
+      <KanbanBoard/>
     {:else}
       <div class="bg-slate-800/60 p-12 rounded-xl text-center border border-purple-500/20 relative overflow-hidden">
         <div class="bg-gradient-to-br from-purple-600/10 to-transparent rounded-xl"></div>
