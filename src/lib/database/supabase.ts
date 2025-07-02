@@ -4,8 +4,11 @@ import { env } from '$env/dynamic/public';
 // production environment variables
 // import { env } from '$env/dynamic/private';
 
-  
-export const supabase = createClient(
-  env.PUBLIC_SUPABASE_URL,
-  env.PUBLIC_SUPABASE_KEY
-);
+const supabaseUrl = env.PUBLIC_SUPABASE_URL;
+const supabaseKey = env.PUBLIC_SUPABASE_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error("Supabase URL and Key must be set in environment variables");
+}
+
+export const supabase = createClient(supabaseUrl, supabaseKey);

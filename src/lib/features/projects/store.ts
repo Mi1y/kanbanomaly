@@ -7,6 +7,7 @@ import type {
   CreateProjectData, 
   UpdateProjectData 
 } from './interfaces.js';
+import { toastActions } from '../toasts/store.js';
 
 const _projects = writable<Project[]>([]);
 const _selectedProjectId = writable<number | null>(null);
@@ -43,8 +44,8 @@ export const projectActions = {
         start_date: project.start_date,
         end_date: project.end_date
       } : null;
-    } catch (error) {
-      console.error("Error getting project by ID", error);
+    } catch {
+      toastActions.warning("Failed to load project details");
       return null;
     }
   },
@@ -56,8 +57,8 @@ export const projectActions = {
     try {
       const projects = await projectApi.getAll();
       _projects.set(projects);
-    } catch (error) {
-      console.error("Error loading projects", error);
+    } catch {
+      toastActions.error("Failed to load projects");
       _projects.set([]);
     } finally {
       _loading.set(false);
@@ -75,8 +76,8 @@ export const projectActions = {
     try {
       const project = await projectApi.getById(projectId);
       _selectedProject.set(project);
-    } catch (error) {
-      console.error("Error loading project", error);
+    } catch {
+      toastActions.warning("Failed to load project details");
       _selectedProject.set(null);
     }
   },
@@ -87,9 +88,9 @@ export const projectActions = {
       const newProject = await projectApi.create(data);
       _projects.update(projects => [...projects, newProject]);
       return newProject;
-    } catch (error) {
-      console.error("Error creating project", error);
-      throw error;
+    } catch {
+      toastActions.warning("Failed to create project");
+      return null;
     } finally {
       _loading.set(false);
     }
@@ -107,9 +108,9 @@ export const projectActions = {
       _selectedProject.update(current => 
         current?.id === projectId ? { ...current, ...updates } : current
       );
-    } catch (error) {
-      console.error("Error updating project", error);
-      throw error;
+    } catch {
+      toastActions.warning("Failed to update project");
+      return null;
     } finally {
       _loading.set(false);
     }
@@ -128,9 +129,9 @@ export const projectActions = {
       _selectedProject.update(current => 
         current?.id === projectId ? null : current
       );
-    } catch (error) {
-      console.error("Error deleting project", error);
-      throw error;
+    } catch {
+      toastActions.error("Failed to delete project");
+      return null;
     } finally {
       _loading.set(false);
     }

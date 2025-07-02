@@ -1,12 +1,11 @@
 <script lang="ts">
-// Internal state
 import { 
   selectedProject, 
   selectedProjectId,
-  projectActions,
   taskColumns, 
   tasksLoading, 
   taskActions,
+  toastActions,
   type CreateTaskData,
   type TaskStatus,
   type TaskLevel,
@@ -35,7 +34,10 @@ function formatDate(dateStr: string | null): string {
 }
 
 async function addNewTask() {
-    if (!newTaskTitle.trim() || !selectedProjectId) return;
+    if (!newTaskTitle.trim() || !selectedProjectId) {
+    toastActions.warning("Please enter a task name");
+    return;
+    }
     
     try {
         const data: CreateTaskData = {
@@ -45,9 +47,10 @@ async function addNewTask() {
             project_id: $selectedProjectId
         };
         await taskActions.create(data);
+        toastActions.success(`Task "${newTaskTitle}" added successfully!`);
         newTaskTitle = '';
-    } catch (error) {
-        alert("Failed to add task");
+    } catch {
+        toastActions.error("Failed to add task");
     }
 }
 
@@ -68,12 +71,12 @@ async function saveTaskEdit() {
         title: editTaskTitle,
         level: editTaskLevel
     });
-    
     editingTaskId = null;
     editTaskTitle = '';
     editTaskLevel = 'medium';
-    } catch (error) {
-    alert("Failed to update task");
+    toastActions.success("Task updated successfully");
+    } catch {
+      toastActions.error("Failed to update task");
     }
 }
 
@@ -84,12 +87,13 @@ function cancelTaskEdit() {
 }
 
 async function deleteTask(taskId: number) {
-    if (!confirm('Are you sure you want to delete this task?')) return;
-    
+  const confirmed = await toastActions.confirm('Are you sure you want to delete this task?');
+    if (!confirmed) return;
     try {
     await taskActions.delete(taskId);
-    } catch (error) {
-    alert("Failed to delete task");
+    toastActions.success("Task deleted successfully");
+    } catch {
+      toastActions.error("Failed to delete task");
     }
 }
 
@@ -106,8 +110,8 @@ async function handleDrop(targetColId: TaskStatus) {
     if (draggedTaskId && dragSourceColumn && dragSourceColumn !== targetColId) {
         try {
             await taskActions.move(draggedTaskId, dragSourceColumn, targetColId);
-        } catch (error) {
-            alert("Failed to move task");
+        } catch {
+            toastActions.error("Failed to move task");
         }
     }
     draggedTaskId = null;
@@ -178,7 +182,6 @@ $effect(() => {
             placeholder="Enter task name"
             class="flex-1 min-w-64 p-3 bg-slate-700/60 border border-purple-400/30 rounded-lg text-white placeholder-slate-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all"
           />
-          <!-- TODO - IMPROVE CSS UI FOR OPTION -->
           <select bind:value={newTaskStatus} class="p-3 bg-slate-700/60 border border-purple-400/30 rounded-lg text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all">
             <option value="todo">TODO</option>
             <option value="doing">IN PROGRESS</option>
@@ -256,7 +259,6 @@ $effect(() => {
               >
                 <div class="flex justify-between items-start">
                   {#if editingTaskId === task.id}
-                    <!-- Edit Mode -->
                     <div class="flex-1 space-y-3">
                       <input
                         bind:value={editTaskTitle}

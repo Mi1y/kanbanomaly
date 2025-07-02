@@ -1,61 +1,68 @@
 <script lang="ts">
-  import type { 
-    CreateProjectData, 
-    UpdateProjectData, 
-    ProjectView 
-  } from '$lib/features';
-  
-  let {isOpen = $bindable(), onProjectCreated, onClose, projectEdit = null} = $props<{
-    isOpen?: boolean;
-    onProjectCreated?: (data: CreateProjectData | UpdateProjectData) => void;
-    onClose?: () => void;
-    projectEdit?: ProjectView | null;
-  }>();
+import { 
+  type CreateProjectData, 
+  type UpdateProjectData, 
+  type ProjectView, 
+  toastActions,
+} from '$lib/features';
 
-  let newProjectTitle = $state('');
-  let newProjectStartDate = $state('');
-  let newProjectEndDate = $state('');
+let {isOpen = $bindable(), onProjectCreated, onClose, projectEdit = null} = $props<{
+  isOpen?: boolean;
+  onProjectCreated?: (data: CreateProjectData | UpdateProjectData) => void;
+  onClose?: () => void;
+  projectEdit?: ProjectView | null;
+}>();
 
-  $effect(() => {
-    if (projectEdit) {
-      newProjectTitle = projectEdit.title;
-      newProjectStartDate = projectEdit.start_date
-        ? projectEdit.start_date.slice(0, 10)
-        : '';
-      newProjectEndDate = projectEdit.end_date
-        ? projectEdit.end_date.slice(0, 10)
-        : '';
-    } else {
-      newProjectTitle = '';
-      newProjectStartDate = '';
-      newProjectEndDate = '';
-    }
-  });
+let newProjectTitle = $state('');
+let newProjectStartDate = $state('');
+let newProjectEndDate = $state('');
 
-async function saveProject() {
-  try {
-    const projectData = {
-      title: newProjectTitle,
-      start_date: newProjectStartDate ? new Date(newProjectStartDate).toISOString() : null,
-      end_date: newProjectEndDate ? new Date(newProjectEndDate).toISOString() : null
-    };
-    onProjectCreated?.(projectData);
-  } catch (error) {
-    console.error('Error preparing project data:', error);
-    alert("Failed to prepare project data");
-  }
-}
-
-  function resetForm() {
+$effect(() => {
+  if (projectEdit) {
+    newProjectTitle = projectEdit.title;
+    newProjectStartDate = projectEdit.start_date
+      ? projectEdit.start_date.slice(0, 10)
+      : '';
+    newProjectEndDate = projectEdit.end_date
+      ? projectEdit.end_date.slice(0, 10)
+      : '';
+  } else {
     newProjectTitle = '';
     newProjectStartDate = '';
     newProjectEndDate = '';
   }
+});
 
-  function closeModal() {
-    resetForm();
-    onClose?.();
-  }
+async function saveProject() {
+if (!newProjectTitle.trim()) {
+  toastActions.warning("Please enter a project name");
+  return;
+}
+try {
+  const projectData = {
+    title: newProjectTitle,
+    start_date: newProjectStartDate ? new Date(newProjectStartDate).toISOString() : null,
+    end_date: newProjectEndDate ? new Date(newProjectEndDate).toISOString() : null
+  };
+  onProjectCreated?.(projectData);
+  toastActions.success(
+    projectEdit ? 'Project updated successfully' : 'Project created successfully'
+  );
+} catch {
+  toastActions.error("Failed to prepare project data");
+}
+}
+
+function resetForm() {
+  newProjectTitle = '';
+  newProjectStartDate = '';
+  newProjectEndDate = '';
+}
+
+function closeModal() {
+  resetForm();
+  onClose?.();
+}
 </script>
 
 <style>

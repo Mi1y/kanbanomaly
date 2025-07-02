@@ -8,6 +8,7 @@ import type {
   CreateTaskData, 
   UpdateTaskData 
 } from './interfaces.js';
+import { toastActions } from '../toasts/store.js';
 
 const _tasks = writable<Task[]>([]);
 const _loading = writable(false);
@@ -45,8 +46,8 @@ export const taskActions = {
       const tasks = await taskApi.getByProject(projectId);
       _tasks.set(tasks);
       _currentProjectId.set(projectId);
-    } catch (error) {
-      console.error("Error loading tasks", error);
+    } catch {
+      toastActions.warning("Failed to load tasks for project");
       _tasks.set([]);
     } finally {
       _loading.set(false);
@@ -61,9 +62,9 @@ async create(data: CreateTaskData) {
         return [...tasks, newTask];
       });
       return newTask;
-    } catch (error) {
-      console.error("❌ Error creating task", error);
-      throw error;
+    } catch {
+      toastActions.warning("Failed to create task");
+      return null;
     } finally {
       _loading.set(false);
     }
@@ -78,9 +79,9 @@ async create(data: CreateTaskData) {
           task.id === taskId ? { ...task, ...updates } : task
         )
       );
-    } catch (error) {
-      console.error("Error updating task", error);
-      throw error;
+    } catch {
+      toastActions.warning("Failed to update task");
+      return null;
     } finally {
       _loading.set(false);
     }
@@ -91,9 +92,9 @@ async create(data: CreateTaskData) {
     try {
       await taskApi.delete(taskId);
       _tasks.update(tasks => tasks.filter(task => task.id !== taskId));
-    } catch (error) {
-      console.error("Error deleting task", error);
-      throw error;
+    } catch {
+      toastActions.warning("Failed to delete task");
+      return null;
     } finally {
       _loading.set(false);
     }
@@ -101,22 +102,12 @@ async create(data: CreateTaskData) {
 
   async move(taskId: number, fromStatus: TaskStatus, toStatus: TaskStatus) {
     if (fromStatus === toStatus) return;
-    
     try {
-      _tasks.update(tasks => 
-        tasks.map(task => 
-          task.id === taskId ? { ...task, status: toStatus } : task
-        )
-      );
-      
+      _tasks.update(tasks => tasks.map(task => task.id === taskId ? { ...task, status: toStatus } : task ));
       await taskApi.update(taskId, { status: toStatus});
-    } catch (error) {
-      _tasks.update(tasks => 
-        tasks.map(task => 
-          task.id === taskId ? { ...task, status: fromStatus} : task
-        )
-      );
-      throw error;
+    } catch {
+      toastActions.warning("Failed to move task");
+      _tasks.update(tasks => tasks.map(task => task.id === taskId ? { ...task, status: fromStatus} : task ));
     }
   }
 };

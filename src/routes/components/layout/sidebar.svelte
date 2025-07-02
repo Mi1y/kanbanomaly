@@ -8,8 +8,8 @@
   type CreateProjectData,
   type UpdateProjectData,
   type ProjectView,
-  type ProjectSummary
-
+  type ProjectSummary,
+  toastActions
 } from '$lib/features';
 
   let newProjectModalOpen = $state(false);
@@ -55,15 +55,16 @@
     closeNewProjectModal();
   }
   async function deleteProject(projectId: number) {
-      if (!confirm('Are you sure?')) return;
-      
+       const confirmed = await toastActions.confirm('Are you sure you want to delete this project?');
+    if (!confirmed) return;
       try {
           await projectActions.delete(projectId);
           if ($selectedProjectId === projectId) {
               projectActions.select(null); 
           }
-      } catch (error) {
-          alert("Failed to delete project");
+          toastActions.success("Project deleted successfully");
+      } catch {
+          toastActions.error("Failed to delete project");
       }
   }
 
