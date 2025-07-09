@@ -52,8 +52,9 @@
             end_date: project.end_date
         };
         const newProject = await projectActions.create(data);
-        projectActions.select(newProject.id);
+        // projectActions.select(newProject.id);
     }
+        projectActions.loadAll();
     closeNewProjectModal();
   }
   async function deleteProject(projectId: number) {

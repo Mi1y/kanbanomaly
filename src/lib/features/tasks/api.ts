@@ -42,5 +42,14 @@ export const taskApi = {
       .eq('id', taskId);
       
     if (error) throw error;
-  }
+  },
+
+  async updatedAt(projectId: number): Promise<void> {
+    const { error } = await supabase
+      .from('projects')
+      .update({ updated_at: new Date().toISOString() })
+      .eq('id', projectId);
+      
+    if (error) throw error;
+  },
 };

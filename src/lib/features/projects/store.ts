@@ -52,8 +52,6 @@ export const projectActions = {
     }
   },
 
-
-
   async loadAll() {
     _loading.set(true);
     try {
@@ -88,7 +86,9 @@ export const projectActions = {
     _loading.set(true);
     try {
       const newProject = await projectApi.create(data);
-      _projects.update(projects => [...projects, newProject]);
+      _projects.update(projects =>
+         [...projects, newProject]
+        );
       return newProject;
     } catch {
       toastActions.warning("Failed to create project");
@@ -102,14 +102,6 @@ export const projectActions = {
     _loading.set(true);
     try {
       await projectApi.update(projectId, updates);
-      _projects.update(projects => 
-        projects.map(project => 
-          project.id === projectId ? { ...project, ...updates } : project
-        )
-      );
-      _selectedProject.update(current => 
-        current?.id === projectId ? { ...current, ...updates } : current
-      );
     } catch {
       toastActions.warning("Failed to update project");
       return null;

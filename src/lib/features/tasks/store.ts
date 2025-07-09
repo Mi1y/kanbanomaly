@@ -1,4 +1,4 @@
-import { writable, derived } from 'svelte/store';
+import { writable, derived, get } from 'svelte/store';
 import { taskApi } from './api.js';
 import type { 
   Task, 
@@ -40,7 +40,6 @@ export const taskActions = {
       _currentProjectId.set(null);
       return;
     }
-    
     _loading.set(true);
     try {
       const tasks = await taskApi.getByProject(projectId);
@@ -58,6 +57,7 @@ async create(data: CreateTaskData) {
     _loading.set(true);
     try {
       const newTask = await taskApi.create(data);
+      await taskApi.updatedAt(data.project_id);
       _tasks.update(tasks => {
         return [...tasks, newTask];
       });
@@ -72,8 +72,13 @@ async create(data: CreateTaskData) {
 
   async update(taskId: number, updates: UpdateTaskData) {
     _loading.set(true);
+    // get project id from _tasks
+    const task = get(_tasks).find(t => t.id === taskId);
+    const projectId = task?.project_id;
+
     try {
       await taskApi.update(taskId, updates);
+      await taskApi.updatedAt(projectId || 0);
       _tasks.update(tasks => 
         tasks.map(task => 
           task.id === taskId ? { ...task, ...updates } : task
@@ -89,9 +94,15 @@ async create(data: CreateTaskData) {
 
   async delete(taskId: number) {
     _loading.set(true);
+    // get project id from _tasks
+    const task = get(_tasks).find(t => t.id === taskId);
+    const projectId = task?.project_id;
     try {
       await taskApi.delete(taskId);
-      _tasks.update(tasks => tasks.filter(task => task.id !== taskId));
+      await taskApi.updatedAt(projectId || 0);
+      _tasks.update(tasks => 
+        tasks.filter(task => task.id !== taskId)
+      );
     } catch {
       toastActions.warning("Failed to delete task");
       return null;
@@ -103,7 +114,11 @@ async create(data: CreateTaskData) {
   async move(taskId: number, fromStatus: TaskStatus, toStatus: TaskStatus) {
     if (fromStatus === toStatus) return;
     try {
-      _tasks.update(tasks => tasks.map(task => task.id === taskId ? { ...task, status: toStatus } : task ));
+      _tasks.update(tasks => 
+        tasks.map(task => 
+          task.id === taskId ? { ...task, status: toStatus } : task 
+        )
+      );
       await taskApi.update(taskId, { status: toStatus});
     } catch {
       toastActions.warning("Failed to move task");

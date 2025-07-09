@@ -9,7 +9,8 @@ import {
   type CreateTaskData,
   type TaskStatus,
   type TaskLevel,
-  type TaskView
+  type TaskView,
+  projectActions
 } from '$lib/features';
 import DeadlineBar from './deadline_bar.svelte';
 
@@ -43,9 +44,10 @@ async function addNewTask() {
             title: newTaskTitle,
             status: newTaskStatus,
             level: newTaskLevel,
-            project_id: $selectedProjectId
+            project_id: $selectedProjectId || 0
         };
         await taskActions.create(data);
+        projectActions.loadAll();
         toastActions.success(`Task "${newTaskTitle}" added successfully!`);
         newTaskTitle = '';
     } catch {
@@ -73,6 +75,7 @@ async function saveTaskEdit() {
     editingTaskId = null;
     editTaskTitle = '';
     editTaskLevel = 'medium';
+    projectActions.loadAll();
     toastActions.success("Task updated successfully");
     } catch {
       toastActions.error("Failed to update task");
@@ -87,9 +90,10 @@ function cancelTaskEdit() {
 
 async function deleteTask(taskId: number) {
   const confirmed = await toastActions.confirm('Are you sure you want to delete this task?');
-    if (!confirmed) return;
+  if (!confirmed) return;
     try {
     await taskActions.delete(taskId);
+    projectActions.loadAll();  
     toastActions.success("Task deleted successfully");
     } catch {
       toastActions.error("Failed to delete task");

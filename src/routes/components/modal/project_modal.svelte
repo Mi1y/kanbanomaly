@@ -50,7 +50,7 @@ try {
   };
   onProjectCreated?.(projectData);
   toastActions.success(
-    projectEdit ? 'Project updated successfully' : 'Project created successfully'
+    projectEdit ? `Project ${newProjectTitle} updated successfully` : `Project ${newProjectTitle} created successfully`
   );
 } catch {
   toastActions.error("Failed to prepare project data");
@@ -102,64 +102,62 @@ function closeModal() {
             {projectEdit ? 'Edit Project' : 'Create New Project'}
           </h3>
         </div>
-
-        <div class="space-y-5">
-          <div>
-            <label for="project-title" class="block text-sm font-medium text-slate-300 mb-2">Project Title</label>
-            <input
-              id="project-title"
-              bind:value={newProjectTitle}
-              placeholder="Enter project name"
-              class="p-3 bg-slate-700 border border-purple-400/30 rounded-lg w-full text-white placeholder-slate-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all duration-200"
-            />
-          </div>
-          <label for="project-status" class="block text-sm font-medium text-slate-300 mb-2">Project Status</label>
-          <select 
-            bind:value={newProjectStatus} 
-            class="p-3 bg-slate-700/60 border border-purple-400/30 rounded-lg text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all"
-            >
-            
-            <option value="active" selected>Active</option>
-            <option value="inactive">Inactive</option>
-            <option value="ended">Ended</option>
-          </select>
-
-          <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-5">
             <div>
-              <label for="start-date" class="block text-sm font-medium text-slate-300 mb-2">Start Date</label>
-              <input 
-                id="start-date"
-                type="date" 
-                bind:value={newProjectStartDate} 
-                class="p-3 bg-slate-700 border border-purple-400/30 rounded-lg w-full text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all duration-200" 
+              <label for="project-title" class="block text-sm font-medium text-slate-300 mb-2">Project Title</label>
+              <input
+                id="project-title"
+                bind:value={newProjectTitle}
+                placeholder="Enter project name"
+                class="p-3 bg-slate-700 border border-purple-400/30 rounded-lg w-full text-white placeholder-slate-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all duration-200"
               />
             </div>
-            <div>
-              <label for="end-date" class="block text-sm font-medium text-slate-300 mb-2">End Date</label>
-              <input 
-                id="end-date"
-                type="date" 
-                bind:value={newProjectEndDate} 
-                class="p-3 bg-slate-700 border border-purple-400/30 rounded-lg w-full text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all duration-200" 
-              />
-            </div>
-          </div>
+            <label for="project-status" class="block text-sm font-medium text-slate-300 mb-2">Project Status</label>
+            <select 
+              bind:value={newProjectStatus} 
+              class="p-3 bg-slate-700/60 border border-purple-400/30 rounded-lg text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all"
+              >
+              
+              <option value="active" selected>Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="ended">Ended</option>
+            </select>
 
-          <div class="flex justify-end gap-3 pt-6">
-            <button
-              onclick={closeModal}
-              class="px-6 py-3 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 hover:border-slate-500 transition-all duration-150"
-            >
-              Cancel
-            </button>
-            <button
-              onclick={saveProject}
-              class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg hover:from-purple-500 hover:to-pink-500 transition-all duration-200 font-medium"
-            >
-              {projectEdit ? 'Save Changes' : 'Create Project'}
-            </button>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="start-date" class="block text-sm font-medium text-slate-300 mb-2">Start Date</label>
+                <input 
+                  id="start-date"
+                  type="date" 
+                  bind:value={newProjectStartDate} 
+                  class="p-3 bg-slate-700 border border-purple-400/30 rounded-lg w-full text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all duration-200" 
+                />
+              </div>
+              <div>
+                <label for="end-date" class="block text-sm font-medium text-slate-300 mb-2">End Date</label>
+                <input 
+                  id="end-date"
+                  type="date" 
+                  bind:value={newProjectEndDate} 
+                  class="p-3 bg-slate-700 border border-purple-400/30 rounded-lg w-full text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all duration-200" 
+                />
+              </div>
+            </div>
+              <div class="flex justify-end gap-3 pt-6">
+                <button
+                  onclick={closeModal}
+                  class="px-6 py-3 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 hover:border-slate-500 transition-all duration-150"
+                >
+                  Cancel
+                </button>
+                <button
+                  onclick={saveProject}
+                  class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg hover:from-purple-500 hover:to-pink-500 transition-all duration-200 font-medium"
+                >
+                  {projectEdit ? 'Save Changes' : 'Create Project'}
+                </button>
+              </div>
           </div>
-        </div>
       </div>
     </div>
   </div>
