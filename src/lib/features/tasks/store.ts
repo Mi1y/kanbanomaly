@@ -113,6 +113,9 @@ async create(data: CreateTaskData) {
 
   async move(taskId: number, fromStatus: TaskStatus, toStatus: TaskStatus) {
     if (fromStatus === toStatus) return;
+    // get project id from _tasks
+    const task = get(_tasks).find(t => t.id === taskId);
+    const projectId = task?.project_id;
     try {
       _tasks.update(tasks => 
         tasks.map(task => 
@@ -120,9 +123,10 @@ async create(data: CreateTaskData) {
         )
       );
       await taskApi.update(taskId, { status: toStatus});
+      await taskApi.updatedAt(projectId || 0);
     } catch {
       toastActions.warning("Failed to move task");
       _tasks.update(tasks => tasks.map(task => task.id === taskId ? { ...task, status: fromStatus} : task ));
     }
-  }
+  },
 };
