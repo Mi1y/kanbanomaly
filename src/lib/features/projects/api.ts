@@ -26,6 +26,7 @@ export const projectApi = {
       .from('projects')
       .insert([{
         title: projectData.title,
+        status: projectData.status,
         start_date: projectData.start_date,
         end_date: projectData.end_date
       }])

@@ -14,12 +14,14 @@ let {isOpen = $bindable(), onProjectCreated, onClose, projectEdit = null} = $pro
 }>();
 
 let newProjectTitle = $state('');
+let newProjectStatus = $state('');
 let newProjectStartDate = $state('');
 let newProjectEndDate = $state('');
 
 $effect(() => {
   if (projectEdit) {
     newProjectTitle = projectEdit.title;
+    newProjectStatus = projectEdit.status;
     newProjectStartDate = projectEdit.start_date
       ? projectEdit.start_date.slice(0, 10)
       : '';
@@ -28,19 +30,21 @@ $effect(() => {
       : '';
   } else {
     newProjectTitle = '';
+    newProjectStatus = '';
     newProjectStartDate = '';
     newProjectEndDate = '';
   }
 });
 
 async function saveProject() {
-if (!newProjectTitle.trim()) {
-  toastActions.warning("Please enter a project name");
+if (!newProjectTitle.trim() || !newProjectStatus) {
+  toastActions.warning("Please enter a project name and choose a status");
   return;
 }
 try {
   const projectData = {
     title: newProjectTitle,
+    status: newProjectStatus,
     start_date: newProjectStartDate ? new Date(newProjectStartDate).toISOString() : null,
     end_date: newProjectEndDate ? new Date(newProjectEndDate).toISOString() : null
   };
@@ -55,6 +59,7 @@ try {
 
 function resetForm() {
   newProjectTitle = '';
+  newProjectStatus = '';
   newProjectStartDate = '';
   newProjectEndDate = '';
 }
@@ -108,6 +113,16 @@ function closeModal() {
               class="p-3 bg-slate-700 border border-purple-400/30 rounded-lg w-full text-white placeholder-slate-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all duration-200"
             />
           </div>
+          <label for="project-status" class="block text-sm font-medium text-slate-300 mb-2">Project Status</label>
+          <select 
+            bind:value={newProjectStatus} 
+            class="p-3 bg-slate-700/60 border border-purple-400/30 rounded-lg text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all"
+            >
+            
+            <option value="active" selected>Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="ended">Ended</option>
+          </select>
 
           <div class="grid grid-cols-2 gap-4">
             <div>

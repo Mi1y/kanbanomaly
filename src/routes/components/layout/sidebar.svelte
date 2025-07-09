@@ -39,6 +39,7 @@
     if (projectToEdit) {
         const updates: UpdateProjectData = {
             title: project.title,
+            status: project.status,
             start_date: project.start_date,
             end_date: project.end_date
         };
@@ -46,6 +47,7 @@
     } else {
         const data: CreateProjectData = {
             title: project.title,
+            status: project.status,
             start_date: project.start_date,
             end_date: project.end_date
         };
@@ -97,22 +99,27 @@
 
   <div class="border-b border-purple-500/30 mb-4"></div>
 
-  <div class="flex-1 z-10">
+  <div class="flex-1 z-10 overflow-y-auto overflow-x-hidden custom-scrollbar">
     <h3 class="text-xs font-semibold mb-3 uppercase tracking-wider">Projects</h3>
     {#if $projectList.length > 0}
       <ul class="space-y-1">
-        {#each $projectList as project}
+
+
+        <!-- SIMPLE -->
+        <!-- {#each $projectList as project}
           <li class="group relative">
-            <div class="flex rounded-lg overflow-hidden">
+            <div class="flex rounded-lg">
               
               <button 
-                class="flex-1 text-left px-3 py-3 transition-all duration-150 {$selectedProjectId === project.id ? 'bg-gradient-to-r from-purple-600/60 to-pink-600/60 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white'}"
+                class="flex-1 text-left px-1 py-3 transition-all duration-150 {$selectedProjectId === project.id ? 'bg-gradient-to-r from-purple-600/60 to-pink-600/60 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white'}"
                 onclick={() => selectProject(project.id)}
                 type="button"
               >
                 <div class="flex items-center gap-2">
                   <div class="w-2 h-2 rounded-full {$selectedProjectId === project.id ? 'bg-white' : 'bg-purple-400'} opacity-60"></div>
-                  {project.title}
+                    <span style="max-width: 120px;">
+                      {project.title}
+                    </span>
                 </div>
               </button>
               
@@ -141,10 +148,157 @@
                   </svg>
                 </button>
               </div>
-
             </div>
           </li>
-        {/each}
+        {/each} -->
+
+
+        
+        <!-- ADVANCED -->
+        <!-- ACTIVE -->
+        {#if $projectList.some(p => p.status === 'active')}
+          <li class="text-xs text-emerald-400 font-semibold mt-3 mb-2 px-1">Active</li>
+          {#each $projectList.filter(p => p.status === 'active') as project (project.id)}
+            <li class="group relative custom scrollbar">
+              <div class="flex rounded-lg overflow-hidden">
+                <button 
+                  class="flex-1 text-left px-1 py-2 transition-all duration-150 {$selectedProjectId === project.id ? 'bg-gradient-to-r from-emerald-600/70 to-cyan-600/70 text-white font-medium shadow-lg' : 'text-slate-200 hover:bg-slate-700/80 hover:text-white'}"
+                  onclick={() => selectProject(project.id)}
+                  type="button"
+                >
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full {$selectedProjectId === project.id ? 'bg-white shadow-sm' : 'bg-emerald-400'} opacity-80"></div>
+                    <span style="max-width: 120px;">
+                      {project.title}
+                    </span>
+                  </div>
+                </button>
+                <div class="hidden group-hover:flex items-center bg-slate-700/80 transition-opacity duration-150">
+                  <button
+                    onclick={(e) => { 
+                      e.stopPropagation(); 
+                      startEditProject(project);
+                    }}
+                    class="text-cyan-300 p-2 hover:text-cyan-200 hover:bg-slate-600/50 transition-all duration-150"
+                    title="Edit project"
+                    aria-label="Edit project"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                  </button>
+                  <button
+                    onclick={(e) => { e.stopPropagation(); deleteProject(project.id); }}
+                    class="text-red-300 p-2 hover:text-red-200 hover:bg-slate-600/50 transition-all duration-150"
+                    title="Delete project"
+                    aria-label="Delete project"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </li>
+          {/each}
+        {/if}
+
+        <!-- INACTIVE -->
+        {#if $projectList.some(p => p.status === 'inactive')}
+          <li class="text-xs text-amber-400 font-semibold mt-3 mb-2 px-1">Inactive</li>
+          {#each $projectList.filter(p => p.status === 'inactive') as project (project.id)}
+            <li class="group relative custom scrollbar">
+              <div class="flex rounded-lg overflow-hidden">
+                <button 
+                  class="flex-1 text-left px-1 py-2 transition-all duration-150 {$selectedProjectId === project.id ? 'bg-gradient-to-r from-amber-600/70 to-orange-600/70 text-white font-medium shadow-lg' : 'text-slate-300 hover:bg-slate-700/80 hover:text-slate-100'}"
+                  onclick={() => selectProject(project.id)}
+                  type="button"
+                >
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full {$selectedProjectId === project.id ? 'bg-white shadow-sm' : 'bg-amber-400'} opacity-80"></div>
+                    <span style="max-width: 120px;">
+                      {project.title}
+                    </span>
+                  </div>
+                </button>
+                <div class="hidden group-hover:flex items-center bg-slate-700/80 transition-opacity duration-150">
+                  <button
+                    onclick={(e) => { 
+                      e.stopPropagation(); 
+                      startEditProject(project);
+                    }}
+                    class="text-cyan-300 p-2 hover:text-cyan-200 hover:bg-slate-600/50 transition-all duration-150"
+                    title="Edit project"
+                    aria-label="Edit project"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                  </button>
+                  <button
+                    onclick={(e) => { e.stopPropagation(); deleteProject(project.id); }}
+                    class="text-red-300 p-2 hover:text-red-200 hover:bg-slate-600/50 transition-all duration-150"
+                    title="Delete project"
+                    aria-label="Delete project"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </li>
+          {/each}
+        {/if}
+
+        <!-- ENDED -->
+        {#if $projectList.some(p => p.status === 'ended')}
+          <li class="text-xs text-slate-400 font-semibold mt-3 mb-2 px-1">Ended</li>
+          {#each $projectList.filter(p => p.status === 'ended') as project (project.id)}
+            <li class="group relative custom scrollbar">
+              <div class="flex rounded-lg overflow-hidden">
+                <button 
+                  class="flex-1 text-left px-1 py-2 transition-all duration-150 {$selectedProjectId === project.id ? 'bg-gradient-to-r from-slate-600/70 to-slate-500/70 text-white font-medium shadow-lg' : 'text-slate-400 hover:bg-slate-700/60 hover:text-slate-200'}"
+                  onclick={() => selectProject(project.id)}
+                  type="button"
+                >
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full {$selectedProjectId === project.id ? 'bg-white shadow-sm' : 'bg-slate-500'} opacity-70"></div>
+                    <span style="max-width: 120px;">
+                      {project.title}
+                    </span>
+                  </div>
+                </button>
+                <div class="hidden group-hover:flex items-center bg-slate-700/80 transition-opacity duration-150">
+                  <button
+                    onclick={(e) => { 
+                      e.stopPropagation(); 
+                      startEditProject(project);
+                    }}
+                    class="text-slate-300 p-2 hover:text-slate-200 hover:bg-slate-600/50 transition-all duration-150"
+                    title="Edit project"
+                    aria-label="Edit project"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                  </button>
+                  <button
+                    onclick={(e) => { e.stopPropagation(); deleteProject(project.id); }}
+                    class="text-red-300 p-2 hover:text-red-200 hover:bg-slate-600/50 transition-all duration-150"
+                    title="Delete project"
+                    aria-label="Delete project"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </li>
+          {/each}
+        {/if}
+        
       </ul>
     {:else}
       <div class="text-slate-400 text-sm text-center py-8">

@@ -13,7 +13,6 @@ import {
 } from '$lib/features';
 import DeadlineBar from './deadline_bar.svelte';
 
-
 let newTaskTitle = $state('');
 let newTaskStatus = $state<TaskStatus>('todo');
 let newTaskLevel = $state<TaskLevel>('medium');
@@ -141,8 +140,13 @@ $effect(() => {
             {$selectedProject.title}
           </h2>
           <div class="text-xs text-slate-400 bg-slate-700/50 px-2 py-1 rounded-full">
-            <!-- TODO CHECK IF PROJECT ACTIVE/DONE/UNDONE -->
+            {#if $selectedProject.status === 'active'}
             PROJECT ACTIVE
+            {:else if $selectedProject.status === 'inactive'}
+            PROJECT INACTIVE
+            {:else if $selectedProject.status === 'ended'}
+            PROJECT ENDED
+            {/if}
           </div>
         </div>
         
@@ -176,33 +180,36 @@ $effect(() => {
           <h3 class="text-lg font-bold text-white">Deploy New Task</h3>
         </div>
         
-        <div class="flex gap-3 flex-wrap">
-          <input
-            bind:value={newTaskTitle}
-            placeholder="Enter task name"
-            class="flex-1 min-w-64 p-3 bg-slate-700/60 border border-purple-400/30 rounded-lg text-white placeholder-slate-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all"
-          />
-          <select bind:value={newTaskStatus} class="p-3 bg-slate-700/60 border border-purple-400/30 rounded-lg text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all">
-            <option value="todo">TODO</option>
-            <option value="doing">IN PROGRESS</option>
-            <option value="done">COMPLETED</option>
-          </select>
-          
-          <select bind:value={newTaskLevel} class="appearance-none p-3 min-w-40 bg-slate-700/60 border border-purple-400/30 rounded-lg text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all">
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-            <option value="critical">Critical</option>
-          </select>
-          
-          <button
-            onclick={addNewTask}
-            class="bg-gradient-to-r from-cyan-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-cyan-500 hover:to-purple-500 transition-all duration-300 transform hover:scale-105 font-medium"
-            type="button"
-          >
-            Deploy Task
-          </button>
-        </div>
+        <!-- Form: pressing Enter or clicking the button will deploy a new task -->
+        <form onsubmit={addNewTask}>
+          <div class="flex gap-3 flex-wrap">
+            <input
+              bind:value={newTaskTitle}
+              placeholder="Enter task name"
+              class="flex-1 min-w-64 p-3 bg-slate-700/60 border border-purple-400/30 rounded-lg text-white placeholder-slate-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all"
+            />
+            <select bind:value={newTaskStatus} class="p-3 bg-slate-700/60 border border-purple-400/30 rounded-lg text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all">
+              <option value="todo">TODO</option>
+              <option value="doing">IN PROGRESS</option>
+              <option value="done">COMPLETED</option>
+            </select>
+            
+            <select bind:value={newTaskLevel} class="appearance-none p-3 min-w-40 bg-slate-700/60 border border-purple-400/30 rounded-lg text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="critical">Critical</option>
+            </select>
+            
+            <button
+              onclick={addNewTask}
+              class="bg-gradient-to-r from-cyan-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-cyan-500 hover:to-purple-500 transition-all duration-300 transform hover:scale-105 font-medium"
+              type="button"
+            >
+              Deploy Task
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   
@@ -237,7 +244,7 @@ $effect(() => {
             </div>
           </div>
   
-          <div class="p-4 min-h-96 space-y-3">
+          <div class="p-4 min-h-96 space-y-3 overflow-y-auto max-h-[75vh] custom-scrollbar">
             {#if $tasksLoading}
               <div class="flex items-center justify-center py-8">
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-400"></div>

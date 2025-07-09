@@ -17,13 +17,14 @@ const _loading = writable(false);
 export const projectsLoading = { subscribe: _loading.subscribe };
 
 export const projectList = derived(_projects, (projects): ProjectSummary[] => 
-  projects.map(p => ({ id: p.id, title: p.title }))
+  projects.map(p => ({ id: p.id, title: p.title, status: p.status }))
 );
 
 export const selectedProject = derived(_selectedProject, (project): ProjectView | null => 
   project ? {
     id: project.id,
     title: project.title,
+    status: project.status,
     start_date: project.start_date,
     end_date: project.end_date
   } : null
@@ -41,6 +42,7 @@ export const projectActions = {
       return project ? {
         id: project.id,
         title: project.title,
+        status: project.status,
         start_date: project.start_date,
         end_date: project.end_date
       } : null;
@@ -135,5 +137,5 @@ export const projectActions = {
     } finally {
       _loading.set(false);
     }
-  }
+  },
 };
