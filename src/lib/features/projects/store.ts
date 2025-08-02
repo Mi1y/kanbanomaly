@@ -1,5 +1,6 @@
 import { writable, derived } from 'svelte/store';
-import { projectApi } from './api.js';
+// DEMO
+import { projectApi } from '../../database/supabase';
 import type { 
   Project, 
   ProjectView, 

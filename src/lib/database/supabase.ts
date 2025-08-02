@@ -1,14 +1,20 @@
-import { createClient } from '@supabase/supabase-js';
-import { env } from '$env/dynamic/public';
+// DEMO
+import { demoProjectApi, demoTaskApi } from './demo_data';
 
-// production environment variables
-// import { env } from '$env/dynamic/private';
+export const isDemoMode = true; 
 
-const supabaseUrl = env.PUBLIC_SUPABASE_URL;
-const supabaseKey = env.PUBLIC_SUPABASE_KEY;
+export const projectApi = isDemoMode ? demoProjectApi : {
+  async getAll() { },
+  async getById() {},
+  async create() {},
+  async update() {},
+  async delete() {}
+};
 
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error("Supabase URL and Key must be set in environment variables");
-}
-
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export const taskApi = isDemoMode ? demoTaskApi : {
+  async getByProject() {},
+  async create() {},
+  async update() {},
+  async delete() {},
+  async updatedAt() {}
+};

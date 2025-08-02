@@ -1,5 +1,6 @@
 import { writable, derived, get } from 'svelte/store';
-import { taskApi } from './api.js';
+// DEMO
+import { taskApi } from '../../database/supabase';
 import type { 
   Task, 
   TaskColumns, 
