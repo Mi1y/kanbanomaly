@@ -14,7 +14,7 @@ Easily move tasks between columns, set due dates, and keep your workflow smooth 
 
     ⚡ Fast updates and quick data loading with Supabase
 
-    🧡 Built with Svelte — lightweight and responsive
+    🧡 Built with Svelte
 
 ## 🗄️ Powered by Supabase
 
