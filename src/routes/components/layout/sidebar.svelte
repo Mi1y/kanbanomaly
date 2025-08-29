@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import ProjectModal from '../modal/project_modal.svelte';
+  import SettingsModal from '../modal/settings_modal.svelte';
   import { 
   projectList, 
   selectedProjectId, 
@@ -12,9 +13,11 @@
   toastActions
 } from '$lib/features';
 
+  let showSidebar = $state(true);
   let newProjectModalOpen = $state(false);
+  let settingsModalOpen = $state(false);
   let projectToEdit: ProjectView | null = $state(null);
-
+  
   function selectProject(projectId: number) {
     projectActions.select(projectId);
   }
@@ -33,6 +36,13 @@
   function closeNewProjectModal() {
     newProjectModalOpen = false;
     projectToEdit = null;
+  }
+
+  function openSettingsModal() {
+    settingsModalOpen = true;
+  }
+  function closeSettingsModal() {
+    settingsModalOpen = false;
   }
 
   async function handleProjectCreatedOrEdited(project: any) {
@@ -71,19 +81,37 @@
       }
   }
 
+  function toggleSidebar() {
+    showSidebar = !showSidebar;
+  }
+
   onMount(() => {
     projectActions.loadAll();
   });
 </script>
+<div class="{showSidebar ? 'w-64' : 'w-10'} p-4 bg-blue-50 flex flex-col relative dark:bg-gray-800 border-l border-blue-200 dark:border-gray-700 overflow-y-auto overflow-x-hidden transition-all duration-300 ease-in-out">
+<button
+  class="absolute right-1 p-2 rounded-full bg-slate-700/60 hover:bg-slate-600 text-slate-300 hover:text-white transition-all duration-200 z-20"
+  onclick={toggleSidebar}
+  aria-label={showSidebar ? "Collapse sidebar" : "Expand sidebar"}>
+  {#if showSidebar}
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+      <path stroke-linecap="round" stroke-linejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
+    </svg>
+  {:else}
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+      <path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15L18.75 12l-7.5 7.5" />
+    </svg>
+  {/if}
+</button>
 
-<div class="w-64 bg-slate-800/90 p-4 flex flex-col relative">
+{#if showSidebar}
   <div class="mb-6 text-center">
     <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 mb-2 tracking-wide">
       Kanbanomaly
     </h1>
     <div class="w-full h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
   </div>
-
   <div class="mb-4">
     <button 
       onclick={openNewProjectModal}
@@ -310,14 +338,26 @@
       </div>
     {/if}
   </div>
-
   <div class="mt-4 pt-4 border-t border-purple-500/30">
-    <div class="flex items-center justify-center gap-2 text-xs text-slate-400">
+    <div class="flex flex-row items-center gap-2 text-xs text-slate-400">
+      <button
+        onclick={openSettingsModal}
+        class="px-4 py-2 text-slate-300 rounded-lg hover:bg-slate-700 hover:border-slate-500 transition-all duration-150"
+        aria-label="Open settings"
+        >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+        </svg>
+          <!-- <label for="settings-status" class="text-sm font-medium text-slate-300">Settings</label> -->
+      </button>
+
       <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 font-medium">
-        💻 Made by Mi1y
+        <p>💻 Made by Mi1y</p>
       </span>
     </div>
   </div>
+  {/if}
 </div>
 
 <ProjectModal 
@@ -325,4 +365,8 @@
   onProjectCreated={handleProjectCreatedOrEdited}
   onClose={closeNewProjectModal}
   projectEdit={projectToEdit}
+/>
+<SettingsModal
+  bind:isOpen={settingsModalOpen}
+  onClose={closeSettingsModal}
 />

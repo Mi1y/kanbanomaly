@@ -11,7 +11,7 @@ export type {
   TaskColumns,
   TaskStatus,
   TaskLevel 
-} from './tasks/interfaces.js';
+} from './tasks/interfaces';
 
 export { 
   projectList, 
@@ -19,22 +19,30 @@ export {
   selectedProjectId,
   projectsLoading, 
   projectActions 
-} from './projects/store.js';
+} from './projects/store';
 
 export type { 
   CreateProjectData, 
   UpdateProjectData, 
   ProjectView,
   ProjectSummary
-} from './projects/interfaces.js';
+} from './projects/interfaces';
 
 export {
   toasts, 
   toastActions 
-} from './toasts/store.js';
+} from './toasts/store';
 
 export type {
   Toast, 
   CreateToastData, 
   ToastType, 
-} from './toasts/interfaces.js';
+} from './toasts/interfaces';
+
+export { 
+  currentLanguage, 
+  setLanguage, 
+  translate
+} from './translator/store';
+
+export type { Language } from './translator/store';

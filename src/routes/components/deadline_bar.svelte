@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { translate } from '$lib/features';
 
   let { newProjectStartDate, newProjectEndDate } = $props<{
     newProjectStartDate: Date | null;
@@ -41,12 +42,12 @@
 </script>
 
 {#if newProjectStartDate && newProjectEndDate}
-  <div class="bg-slate-800/60 rounded-xl p-8 border border-purple-500/20 relative overflow-hidden">
+  <div class="bg-slate-800/60 rounded-xl lg:p-8 border border-purple-500/20 relative overflow-hidden">
     <div class="relative">
       <div class="flex items-center justify-center gap-3 mb-6">
         <div class="w-3 h-3 rounded-full {days <= 7 ? 'bg-red-400' : days <= 30 ? 'bg-yellow-400' : 'bg-emerald-400'}"></div>
         <h1 class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 tracking-wide">
-          DEADLINE TRACKER
+          {$translate.deadline_tracker}
         </h1>
       </div>
 
