@@ -47,7 +47,7 @@
       <div class="flex items-center justify-center gap-3 mb-6">
         <div class="w-3 h-3 rounded-full {days <= 7 ? 'bg-red-400' : days <= 30 ? 'bg-yellow-400' : 'bg-emerald-400'}"></div>
         <h1 class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 tracking-wide">
-          {$translate.deadline_tracker}
+          {$translate.deadline.tracker}
         </h1>
       </div>
 
@@ -88,17 +88,17 @@
         <div class="grid grid-cols-3 gap-4 max-w-md mx-auto">
           <div class="bg-slate-700/50 rounded-lg p-3 border border-slate-600/50">
             <div class="text-2xl font-bold text-white font-mono">{days}</div>
-            <div class="text-xs text-slate-400 uppercase tracking-wider">Days</div>
+            <div class="text-xs text-slate-400 uppercase tracking-wider">{$translate.deadline.days}</div>
           </div>
 
           <div class="bg-slate-700/50 rounded-lg p-3 border border-slate-600/50">
             <div class="text-2xl font-bold text-white font-mono">{hours}</div>
-            <div class="text-xs text-slate-400 uppercase tracking-wider">Hours</div>
+            <div class="text-xs text-slate-400 uppercase tracking-wider">{$translate.deadline.hours}</div>
           </div>
 
           <div class="bg-slate-700/50 rounded-lg p-3 border border-slate-600/50">
             <div class="text-2xl font-bold text-white font-mono">{minutes}</div>
-            <div class="text-xs text-slate-400 uppercase tracking-wider">Minutes</div>
+            <div class="text-xs text-slate-400 uppercase tracking-wider">{$translate.deadline.minutes}</div>
           </div>
         </div>
       </div>

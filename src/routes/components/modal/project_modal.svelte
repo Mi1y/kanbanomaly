@@ -4,6 +4,7 @@ import {
   type UpdateProjectData, 
   type ProjectView, 
   toastActions,
+  translate,
 } from '$lib/features';
 
 let {isOpen = $bindable(), onProjectCreated, onClose, projectEdit = null} = $props<{
@@ -38,7 +39,7 @@ $effect(() => {
 
 async function saveProject() {
 if (!newProjectTitle.trim() || !newProjectStatus) {
-  toastActions.warning("Please enter a project name and choose a status");
+  toastActions.warning($translate.toasts.validation.enterProjectName);
   return;
 }
 try {
@@ -50,10 +51,10 @@ try {
   };
   onProjectCreated?.(projectData);
   toastActions.success(
-    projectEdit ? `Project ${newProjectTitle} updated successfully` : `Project ${newProjectTitle} created successfully`
+    projectEdit ? `${$translate.toasts.other.projectPrefix} ${newProjectTitle} ${$translate.toasts.other.projectSuffixUpdate}` : `${$translate.toasts.other.projectPrefix} ${newProjectTitle} ${$translate.toasts.other.projectSuffixSuccess}`
   );
 } catch {
-  toastActions.error("Failed to prepare project data");
+  toastActions.error($translate.toasts.error.projectsPrepareFailed);
 }
 }
 
@@ -99,33 +100,33 @@ function closeModal() {
             </svg>
           </div>
           <h3 class="text-xl font-bold text-white">
-            {projectEdit ? 'Edit Project' : 'Create New Project'}
+            {projectEdit ? $translate.projects.edit : $translate.projects.new_create}
           </h3>
         </div>
           <div class="space-y-5">
             <div>
-              <label for="project-title" class="block text-sm font-medium text-slate-300 mb-2">Project Title</label>
+              <label for="project-title" class="block text-sm font-medium text-slate-300 mb-2">{$translate.projects.title}</label>
               <input
                 id="project-title"
                 bind:value={newProjectTitle}
-                placeholder="Enter project name"
+                placeholder={$translate.projects.enter_project_name}
                 class="p-3 bg-slate-700 border border-purple-400/30 rounded-lg w-full text-white placeholder-slate-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all duration-200"
               />
             </div>
-            <label for="project-status" class="block text-sm font-medium text-slate-300 mb-2">Project Status</label>
-            <select 
+            <label for="project-status" class="block text-sm font-medium text-slate-300 mb-2">{$translate.projects.status}</label>
+            <select
               bind:value={newProjectStatus} 
               class="p-3 bg-slate-700/60 border border-purple-400/30 rounded-lg text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all"
               >
               
-              <option value="active" selected>Active</option>
-              <option value="inactive">Inactive</option>
-              <option value="ended">Ended</option>
+              <option value="active" selected>{$translate.projects.statusLabels.active}</option>
+              <option value="inactive">{$translate.projects.statusLabels.inactive}</option>
+              <option value="ended">{$translate.projects.statusLabels.ended}</option>
             </select>
 
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label for="start-date" class="block text-sm font-medium text-slate-300 mb-2">Start Date</label>
+                <label for="start-date" class="block text-sm font-medium text-slate-300 mb-2">{$translate.projects.headers.start_date}</label>
                 <input 
                   id="start-date"
                   type="date" 
@@ -134,7 +135,7 @@ function closeModal() {
                 />
               </div>
               <div>
-                <label for="end-date" class="block text-sm font-medium text-slate-300 mb-2">End Date</label>
+                <label for="end-date" class="block text-sm font-medium text-slate-300 mb-2">{$translate.projects.headers.end_date}</label>
                 <input 
                   id="end-date"
                   type="date" 
@@ -148,13 +149,13 @@ function closeModal() {
                   onclick={closeModal}
                   class="px-6 py-3 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 hover:border-slate-500 transition-all duration-150"
                 >
-                  Cancel
+                  {$translate.global.cancel}
                 </button>
                 <button
                   onclick={saveProject}
                   class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg hover:from-purple-500 hover:to-pink-500 transition-all duration-200 font-medium"
                 >
-                  {projectEdit ? 'Save Changes' : 'Create Project'}
+                  {projectEdit ? $translate.projects.save_changes : $translate.projects.create}
                 </button>
               </div>
           </div>

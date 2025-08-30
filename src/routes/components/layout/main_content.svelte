@@ -1,6 +1,6 @@
 <script lang="ts">
 import KanbanBoard from '../kanban_board.svelte';
-import { selectedProjectId } from '$lib/features';
+import { selectedProjectId, translate } from '$lib/features';
 </script>
 
 <div class="flex-1 overflow-y-auto bg-slate-900/50 custom-scrollbar">
@@ -18,15 +18,15 @@ import { selectedProjectId } from '$lib/features';
             </svg>
           </div>
           <h2 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-4">
-            Welcome to Kanbanomaly
+            {$translate.main.welcome}
           </h2>
           <p class="text-slate-400 text-lg mb-6 max-w-md mx-auto">
-            Got a project anomaly? Kanbanomaly will catch it before your coffee gets cold ☕️
+            {$translate.main.description} ☕️
           </p>
           <div class="flex items-center justify-center gap-4 text-sm text-slate-500">
             <div class="flex items-center gap-2">
               <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span>Ready to initialize</span>
+              <span>{$translate.main.initialize}</span>
             </div>
           </div>
         </div>

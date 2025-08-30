@@ -10,7 +10,8 @@ import {
   type TaskStatus,
   type TaskLevel,
   type TaskView,
-  projectActions
+  projectActions,
+  translate
 } from '$lib/features';
 import DeadlineBar from './deadline_bar.svelte';
 
@@ -35,7 +36,7 @@ function formatDate(dateStr: string | null): string {
 
 async function addNewTask() {
     if (!newTaskTitle.trim() || !selectedProjectId) {
-    toastActions.warning("Please enter a task name");
+    toastActions.warning($translate.toasts.validation.enterTaskName);
     return;
     }
     
@@ -48,10 +49,10 @@ async function addNewTask() {
         };
         await taskActions.create(data);
         projectActions.loadAll();
-        toastActions.success(`Task "${newTaskTitle}" added successfully!`);
+        toastActions.success($translate.toasts.other.taskPrefix + ` "${newTaskTitle}" ${$translate.toasts.other.taskSuffixSuccess}`);
         newTaskTitle = '';
     } catch {
-        toastActions.error("Failed to add task");
+        toastActions.error($translate.toasts.error.taskCreateFailed);
     }
 }
 
@@ -76,9 +77,9 @@ async function saveTaskEdit() {
     editTaskTitle = '';
     editTaskLevel = 'medium';
     projectActions.loadAll();
-    toastActions.success("Task updated successfully");
+    toastActions.success($translate.toasts.success.taskUpdated);
     } catch {
-      toastActions.error("Failed to update task");
+      toastActions.error($translate.toasts.error.taskUpdateFailed);
     }
 }
 
@@ -89,14 +90,14 @@ function cancelTaskEdit() {
 }
 
 async function deleteTask(taskId: number) {
-  const confirmed = await toastActions.confirm('Are you sure you want to delete this task?');
+  const confirmed = await toastActions.confirm($translate.toasts.confirm.deleteTask);
   if (!confirmed) return;
     try {
     await taskActions.delete(taskId);
     projectActions.loadAll();  
-    toastActions.success("Task deleted successfully");
+    toastActions.success($translate.toasts.success.taskDeleted);
     } catch {
-      toastActions.error("Failed to delete task");
+      toastActions.error($translate.toasts.error.taskDeleteFailed);
     }
 }
 
@@ -114,7 +115,7 @@ async function handleDrop(targetColId: TaskStatus) {
         try {
             await taskActions.move(draggedTaskId, dragSourceColumn, targetColId);
         } catch {
-            toastActions.error("Failed to move task");
+            toastActions.error($translate.toasts.error.taskMoveFailed);
         }
     }
     draggedTaskId = null;
@@ -145,26 +146,26 @@ $effect(() => {
           </h2>
           <div class="text-xs text-slate-400 bg-slate-700/50 px-2 py-1 rounded-full">
             {#if $selectedProject.status === 'active'}
-            PROJECT ACTIVE
+            {$translate.projects.headers.active}
             {:else if $selectedProject.status === 'inactive'}
-            PROJECT INACTIVE
+            {$translate.projects.headers.inactive}
             {:else if $selectedProject.status === 'ended'}
-            PROJECT ENDED
+            {$translate.projects.headers.ended}
             {/if}
           </div>
         </div>
         
         <div class="grid grid-cols-2 gap-6 text-sm">
           <div class="flex items-center gap-3">
-            <div class="text-slate-400 font-medium">Start date:</div>
+            <div class="text-slate-400 font-medium">{$translate.projects.headers.start_date}</div>
             <div class="text-slate-300 bg-slate-700/50 px-3 py-1 rounded-lg">
-              {formatDate($selectedProject.start_date) || 'Not configured'}
+              {formatDate($selectedProject.start_date) || $translate.projects.headers.notConfigured }
             </div>
           </div>
           <div class="flex items-center gap-3">
-            <div class="text-slate-400 font-medium">End date:</div>
+            <div class="text-slate-400 font-medium">{$translate.projects.headers.end_date}</div>
             <div class="text-slate-300 bg-slate-700/50 px-3 py-1 rounded-lg">
-              {formatDate($selectedProject.end_date) || 'Not configured'}
+              {formatDate($selectedProject.end_date) || $translate.projects.headers.notConfigured }
             </div>
           </div>
         </div>
@@ -181,7 +182,7 @@ $effect(() => {
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
             </svg>
           </div>
-          <h3 class="text-lg font-bold text-white">Deploy New Task</h3>
+          <h3 class="text-lg font-bold text-white">{$translate.tasks.deployNew}</h3>
         </div>
         
         <!-- Form: pressing Enter or clicking the button will deploy a new task -->
@@ -189,20 +190,20 @@ $effect(() => {
           <div class="flex gap-3 flex-wrap">
             <input
               bind:value={newTaskTitle}
-              placeholder="Enter task name"
+              placeholder={$translate.tasks.enterName}
               class="flex-1 min-w-64 p-3 bg-slate-700/60 border border-purple-400/30 rounded-lg text-white placeholder-slate-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all"
             />
             <select bind:value={newTaskStatus} class="p-3 bg-slate-700/60 border border-purple-400/30 rounded-lg text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all">
-              <option value="todo">TODO</option>
-              <option value="doing">IN PROGRESS</option>
-              <option value="done">COMPLETED</option>
+              <option value="todo">{$translate.tasks.columns.todo}</option>
+              <option value="doing">{$translate.tasks.columns.doing}</option>
+              <option value="done">{$translate.tasks.columns.done}</option>
             </select>
             
             <select bind:value={newTaskLevel} class="appearance-none p-3 min-w-40 bg-slate-700/60 border border-purple-400/30 rounded-lg text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all">
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-              <option value="critical">Critical</option>
+              <option value="low">{$translate.tasks.levels.low}</option>
+              <option value="medium">{$translate.tasks.levels.medium}</option>
+              <option value="high">{$translate.tasks.levels.high}</option>
+              <option value="critical">{$translate.tasks.levels.critical}</option>
             </select>
             
             <button
@@ -210,7 +211,7 @@ $effect(() => {
               class="bg-gradient-to-r from-cyan-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-cyan-500 hover:to-purple-500 transition-all duration-300 transform hover:scale-105 font-medium"
               type="button"
             >
-              Deploy Task
+              {$translate.tasks.deploy}
             </button>
           </div>
         </form>
@@ -240,7 +241,7 @@ $effect(() => {
                   statusColumnKey === 'doing' ? 'bg-blue-400' : 
                   'bg-emerald-400'
                 }"></div>
-                {statusColumnKey === 'todo' ? 'TODO' : statusColumnKey === 'doing' ? 'IN PROGRESS' : 'COMPLETED'}
+                {statusColumnKey === 'todo' ? $translate.tasks.columns.todo : statusColumnKey === 'doing' ? $translate.tasks.columns.doing : $translate.tasks.columns.done}
               </h3>
               <div class="text-xs text-slate-400 bg-slate-700/50 px-2 py-1 rounded-full">
                 {columnTasks.length}
@@ -252,7 +253,7 @@ $effect(() => {
             {#if $tasksLoading}
               <div class="flex items-center justify-center py-8">
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-400"></div>
-                <span class="ml-2 text-slate-400">Loading tasks...</span>
+                <span class="ml-2 text-slate-400">{$translate.tasks.loading}</span>
               </div>
             {/if}
             
@@ -277,10 +278,10 @@ $effect(() => {
                         onkeydown={(e) => e.key === 'Enter' && saveTaskEdit()}
                       />
                       <select bind:value={editTaskLevel} class="w-full p-2 bg-slate-700/60 border border-purple-400/30 rounded-lg text-white focus:border-purple-400 focus:outline-none">
-                        <option value="low">Low Priority</option>
-                        <option value="medium">Medium Priority</option>
-                        <option value="high">High Priority</option>
-                        <option value="critical">Critical</option>
+                        <option value="low">{$translate.tasks.priority.low}</option>
+                        <option value="medium">{$translate.tasks.priority.medium}</option>
+                        <option value="high">{$translate.tasks.priority.high}</option>
+                        <option value="critical">{$translate.tasks.priority.critical}</option>
                       </select>
                     </div>
                     <div class="flex gap-1 ml-3">
@@ -360,7 +361,7 @@ $effect(() => {
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                   </svg>
                 </div>
-                <p class="text-slate-500 text-sm italic">No anomalies detected</p>
+                <p class="text-slate-500 text-sm italic">{$translate.global.noAnomalyDetected}</p>
               </div>
             {/if}
           </div>
@@ -379,7 +380,7 @@ $effect(() => {
   <div class="flex justify-center items-center h-64">
     <div class="text-center">
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400 mx-auto mb-4"></div>
-      <p class="text-slate-400">Preparing project board...</p>
+      <p class="text-slate-400">{$translate.global.preparingBoard}</p>
     </div>
   </div>
 {/if}

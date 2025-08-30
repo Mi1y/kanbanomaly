@@ -8,6 +8,7 @@ import type {
   CreateTaskData, 
   UpdateTaskData 
 } from './interfaces.js';
+import { getTranslation } from '../translator/store.js';
 import { toastActions } from '../toasts/store.js';
 
 const _tasks = writable<Task[]>([]);
@@ -46,7 +47,7 @@ export const taskActions = {
       _tasks.set(tasks);
       _currentProjectId.set(projectId);
     } catch {
-      toastActions.warning("Failed to load tasks for project");
+      toastActions.warning(getTranslation("toasts.error.taskLoadFailed"));
       _tasks.set([]);
     } finally {
       _loading.set(false);
@@ -63,7 +64,7 @@ async create(data: CreateTaskData) {
       });
       return newTask;
     } catch {
-      toastActions.warning("Failed to create task");
+      toastActions.warning(getTranslation("toasts.error.taskCreateFailed"));
       return null;
     } finally {
       _loading.set(false);
@@ -85,7 +86,7 @@ async create(data: CreateTaskData) {
         )
       );
     } catch {
-      toastActions.warning("Failed to update task");
+      toastActions.warning(getTranslation("toasts.error.taskUpdateFailed"));
       return null;
     } finally {
       _loading.set(false);
@@ -104,7 +105,7 @@ async create(data: CreateTaskData) {
         tasks.filter(task => task.id !== taskId)
       );
     } catch {
-      toastActions.warning("Failed to delete task");
+      toastActions.warning(getTranslation("toasts.error.taskDeleteFailed"));
       return null;
     } finally {
       _loading.set(false);
@@ -125,7 +126,7 @@ async create(data: CreateTaskData) {
       await taskApi.update(taskId, { status: toStatus});
       await taskApi.updatedAt(projectId || 0);
     } catch {
-      toastActions.warning("Failed to move task");
+      toastActions.warning(getTranslation("toasts.error.taskMoveFailed"));
       _tasks.update(tasks => tasks.map(task => task.id === taskId ? { ...task, status: fromStatus} : task ));
     }
   },

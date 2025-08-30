@@ -5,8 +5,9 @@ import type {
   ProjectView, 
   ProjectSummary,
   CreateProjectData, 
-  UpdateProjectData 
+  UpdateProjectData, 
 } from './interfaces.js';
+import { getTranslation } from '../translator/store';
 import { toastActions } from '../toasts/store.js';
 
 const _projects = writable<Project[]>([]);
@@ -47,7 +48,7 @@ export const projectActions = {
         end_date: project.end_date
       } : null;
     } catch {
-      toastActions.warning("Failed to load project details");
+      toastActions.warning(getTranslation('toasts.error.projectLoadDetailsFailed'));
       return null;
     }
   },
@@ -58,7 +59,7 @@ export const projectActions = {
       const projects = await projectApi.getAll();
       _projects.set(projects);
     } catch {
-      toastActions.error("Failed to load projects");
+      toastActions.error(getTranslation('toasts.error.projectsLoadFailed'));
       _projects.set([]);
     } finally {
       _loading.set(false);
@@ -77,7 +78,7 @@ export const projectActions = {
       const project = await projectApi.getById(projectId);
       _selectedProject.set(project);
     } catch {
-      toastActions.warning("Failed to load project details");
+      toastActions.warning(getTranslation('toasts.error.projectLoadDetailsFailed'));
       _selectedProject.set(null);
     }
   },
@@ -91,7 +92,7 @@ export const projectActions = {
         );
       return newProject;
     } catch {
-      toastActions.warning("Failed to create project");
+      toastActions.warning(getTranslation('toasts.error.projectCreateFailed'));
       return null;
     } finally {
       _loading.set(false);
@@ -103,7 +104,7 @@ export const projectActions = {
     try {
       await projectApi.update(projectId, updates);
     } catch {
-      toastActions.warning("Failed to update project");
+      toastActions.warning(getTranslation('toasts.error.projectUpdateFailed'));
       return null;
     } finally {
       _loading.set(false);
@@ -124,7 +125,7 @@ export const projectActions = {
         current?.id === projectId ? null : current
       );
     } catch {
-      toastActions.error("Failed to delete project");
+      toastActions.error(getTranslation('toasts.error.projectDeleteFailed'));
       return null;
     } finally {
       _loading.set(false);

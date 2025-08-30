@@ -1,17 +1,17 @@
 <script lang="ts">
 import { page } from '$app/state';
-let {data = null} = $props();
+import { translate } from '$lib/features';
 
 const errorStatus = page.status || 500;
-const errorMessage = page.error?.message || 'An unknown error occurred';
+const errorMessage = page.error?.message || $translate.error.unknown;
 
 const errorInfo = $derived({
-    title: `Error ${errorStatus}`,
-    description: 'An unexpected error occurred.',
+    title: `${$translate.error.titlePrefix} ${errorStatus}`,
+    description: $translate.error.unexpected,
     suggestions: [
-        'Check if the database server is running and accessible',
-        'Ensure that the API endpoint is correct',
-        'Try refreshing the page',
+        $translate.error.tips.checkDatabase,
+        $translate.error.tips.checkAPI,
+        $translate.error.tips.refresh,
     ]
 });
 </script>
@@ -37,14 +37,14 @@ const errorInfo = $derived({
 
         {#if errorMessage !== 'An unknown error occurred'}
             <div class="bg-slate-700 p-4 rounded mb-6">
-                <h3 class="text-sm font-semibold text-red-400 mb-2">Error Details:</h3>
+                <h3 class="text-sm font-semibold text-red-400 mb-2">{$translate.error.details}</h3>
                 <p class="text-sm text-slate-300 font-mono break-words">{errorMessage}</p>
                 
             </div>
         {/if}
 
         <div class="bg-slate-700 p-4 rounded mb-6">
-            <h3 class="text-sm font-semibold text-blue-400 mb-3">What you can try:</h3>
+            <h3 class="text-sm font-semibold text-blue-400 mb-3">{$translate.error.tips.suggestions}</h3>
             <ul class="text-sm text-slate-300 space-y-2">
                 {#each errorInfo.suggestions as suggestion}
                     <li class="flex items-start">

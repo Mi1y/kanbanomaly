@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { writable, get } from 'svelte/store';
 import { browser } from '$app/environment';
 import { translations } from './translator';
 
@@ -35,9 +35,18 @@ if (browser) {
 export function setLanguage(lang: Language) {
   currentLanguage.set(lang);
 }
-
-export const translate = writable<Record<string, string>>({});
+// export const translate = writable<Record<string, string>>({});
+export const translate = writable<any>({});
 
 currentLanguage.subscribe(lang => {
   translate.set(translations[lang]);
 });
+
+// for ts translate
+export function getTranslation(key: string, category?: string): string {
+  const t = get(translate);
+  if (category) {
+    return t[category]?.[key] || key;
+  }
+  return t[key] || key;
+}

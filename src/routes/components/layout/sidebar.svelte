@@ -10,7 +10,8 @@
   type UpdateProjectData,
   type ProjectView,
   type ProjectSummary,
-  toastActions
+  toastActions,
+  translate
 } from '$lib/features';
 
   let showSidebar = $state(true);
@@ -68,16 +69,16 @@
     closeNewProjectModal();
   }
   async function deleteProject(projectId: number) {
-       const confirmed = await toastActions.confirm('Are you sure you want to delete this project?');
+       const confirmed = await toastActions.confirm($translate.toasts.confirm.deleteProject);
     if (!confirmed) return;
       try {
           await projectActions.delete(projectId);
           if ($selectedProjectId === projectId) {
               projectActions.select(null); 
           }
-          toastActions.success("Project deleted successfully");
+          toastActions.success($translate.toasts.success.projectDeleted);
       } catch {
-          toastActions.error("Failed to delete project");
+          toastActions.error($translate.toasts.error.projectDeleteFailed);
       }
   }
 
@@ -93,7 +94,7 @@
 <button
   class="absolute right-1 p-2 rounded-full bg-slate-700/60 hover:bg-slate-600 text-slate-300 hover:text-white transition-all duration-200 z-20"
   onclick={toggleSidebar}
-  aria-label={showSidebar ? "Collapse sidebar" : "Expand sidebar"}>
+  aria-label={showSidebar ? $translate.sidebar.collapse : $translate.sidebar.expand}>
   {#if showSidebar}
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
       <path stroke-linecap="round" stroke-linejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
@@ -121,7 +122,7 @@
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
         </svg>
-        Create New Project
+        {$translate.sidebar.createProject}
       </span>
     </button>
   </div>
@@ -129,7 +130,7 @@
   <div class="border-b border-purple-500/30 mb-4"></div>
 
   <div class="flex-1 z-10 overflow-y-auto overflow-x-hidden custom-scrollbar">
-    <h3 class="text-xs font-semibold mb-3 uppercase tracking-wider">Projects</h3>
+    <h3 class="text-xs font-semibold mb-3 uppercase tracking-wider">{$translate.sidebar.projectsList}</h3>
     {#if $projectList.length > 0}
       <ul class="space-y-1">
 
@@ -186,7 +187,7 @@
         <!-- ADVANCED -->
         <!-- ACTIVE -->
         {#if $projectList.some(p => p.status === 'active')}
-          <li class="text-xs text-emerald-400 font-semibold mt-3 mb-2 px-1">Active</li>
+          <li class="text-xs text-emerald-400 font-semibold mt-3 mb-2 px-1">{$translate.projects.statusLabels.active}</li>
           {#each $projectList.filter(p => p.status === 'active') as project (project.id)}
             <li class="group relative custom scrollbar">
               <div class="flex rounded-lg overflow-hidden">
@@ -209,8 +210,8 @@
                       startEditProject(project);
                     }}
                     class="text-cyan-300 p-2 hover:text-cyan-200 hover:bg-slate-600/50 transition-all duration-150"
-                    title="Edit project"
-                    aria-label="Edit project"
+                    title={$translate.projects.edit}
+                    aria-label={$translate.projects.edit}
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -219,8 +220,8 @@
                   <button
                     onclick={(e) => { e.stopPropagation(); deleteProject(project.id); }}
                     class="text-red-300 p-2 hover:text-red-200 hover:bg-slate-600/50 transition-all duration-150"
-                    title="Delete project"
-                    aria-label="Delete project"
+                    title={$translate.projects.delete}
+                    aria-label={$translate.projects.delete}
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -234,7 +235,7 @@
 
         <!-- INACTIVE -->
         {#if $projectList.some(p => p.status === 'inactive')}
-          <li class="text-xs text-amber-400 font-semibold mt-3 mb-2 px-1">Inactive</li>
+          <li class="text-xs text-amber-400 font-semibold mt-3 mb-2 px-1">{$translate.projects.statusLabels.inactive}</li>
           {#each $projectList.filter(p => p.status === 'inactive') as project (project.id)}
             <li class="group relative custom scrollbar">
               <div class="flex rounded-lg overflow-hidden">
@@ -257,8 +258,8 @@
                       startEditProject(project);
                     }}
                     class="text-cyan-300 p-2 hover:text-cyan-200 hover:bg-slate-600/50 transition-all duration-150"
-                    title="Edit project"
-                    aria-label="Edit project"
+                    title={$translate.projects.edit}
+                    aria-label={$translate.projects.edit}
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -267,8 +268,8 @@
                   <button
                     onclick={(e) => { e.stopPropagation(); deleteProject(project.id); }}
                     class="text-red-300 p-2 hover:text-red-200 hover:bg-slate-600/50 transition-all duration-150"
-                    title="Delete project"
-                    aria-label="Delete project"
+                    title={$translate.projects.delete}
+                    aria-label={$translate.projects.delete}
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -282,7 +283,7 @@
 
         <!-- ENDED -->
         {#if $projectList.some(p => p.status === 'ended')}
-          <li class="text-xs text-slate-400 font-semibold mt-3 mb-2 px-1">Ended</li>
+          <li class="text-xs text-slate-400 font-semibold mt-3 mb-2 px-1">{$translate.projects.statusLabels.ended}</li>
           {#each $projectList.filter(p => p.status === 'ended') as project (project.id)}
             <li class="group relative custom scrollbar">
               <div class="flex rounded-lg overflow-hidden">
@@ -305,8 +306,8 @@
                       startEditProject(project);
                     }}
                     class="text-slate-300 p-2 hover:text-slate-200 hover:bg-slate-600/50 transition-all duration-150"
-                    title="Edit project"
-                    aria-label="Edit project"
+                    title={$translate.projects.edit}
+                    aria-label={$translate.projects.edit}
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -315,8 +316,8 @@
                   <button
                     onclick={(e) => { e.stopPropagation(); deleteProject(project.id); }}
                     class="text-red-300 p-2 hover:text-red-200 hover:bg-slate-600/50 transition-all duration-150"
-                    title="Delete project"
-                    aria-label="Delete project"
+                    title={$translate.projects.delete}
+                    aria-label={$translate.projects.delete}
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -334,7 +335,7 @@
         <svg class="w-8 h-8 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
         </svg>
-        <span>No projects detected</span>
+        <span>{$translate.sidebar.noProjects}</span>
       </div>
     {/if}
   </div>
@@ -343,8 +344,8 @@
       <button
         onclick={openSettingsModal}
         class="px-4 py-2 text-slate-300 rounded-lg hover:bg-slate-700 hover:border-slate-500 transition-all duration-150"
-        aria-label="Open settings"
-        >
+        aria-label={$translate.sidebar.openSettings}
+      >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />

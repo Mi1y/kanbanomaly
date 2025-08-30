@@ -1,5 +1,5 @@
 <script lang="ts">
-import { toasts, toastActions } from "$lib/features";
+import { toasts, toastActions, translate } from "$lib/features";
 import { fly } from 'svelte/transition';
 
 let hoveredToastId= $state<string | null>(null);
@@ -99,13 +99,13 @@ function resumeTimer(toastId: string) {
                         class="px-3 py-1.5 text-xs font-medium bg-white/20 hover:bg-white/30 rounded transition-colors"
                         onclick={toast.onConfirm}
                     >
-                        Confirm
+                        {$translate.global.confirm}
                     </button>
                     <button
                         class="px-3 py-1.5 text-xs font-medium bg-black/20 hover:bg-black/30 rounded transition-colors"
                         onclick={toast.onCancel}
                     >
-                        Cancel
+                        {$translate.global.cancel}
                     </button>
                 </div>
             {/if}

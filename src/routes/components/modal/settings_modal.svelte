@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { currentLanguage, setLanguage } from '$lib/features/translator/store';
+  import { currentLanguage, setLanguage, translate } from '$lib/features';
 
 let { isOpen = $bindable(), onClose,} = $props<{
   isOpen?: boolean;
@@ -50,11 +50,11 @@ function closeModal() {
             </svg>
           </div>
             <h3 class="text-xl font-bold text-white">
-                Settings
+                {$translate.ui.settings}
             </h3>
         </div>
           <div class="space-y-5">
-            <label for="language-status" class="block text-sm font-medium text-slate-300 mb-2">Language</label>
+            <label for="language-status" class="block text-sm font-medium text-slate-300 mb-2">{$translate.ui.language}</label>
             <select 
             bind:value={$currentLanguage} 
             onchange={handleLanguageChange}
@@ -72,14 +72,14 @@ function closeModal() {
                   onclick={closeModal}
                   class="px-6 py-3 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 hover:border-slate-500 transition-all duration-150"
                 >
-                  Cancel
+                  {$translate.global.cancel}
                 </button>
 
                 <button
                   onclick={saveSettings}
                   class="px-6 py-3 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 hover:border-slate-500 transition-all duration-150"
                 >
-                  Save
+                  {$translate.global.save}
                 </button>
             
               </div>
