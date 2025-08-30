@@ -97,7 +97,8 @@ export const translations = {
                 taskCreated: 'Task created successfully',
                 taskUpdated: 'Task updated successfully',
                 taskDeleted: 'Task deleted successfully',
-                taskMoved: 'Task moved successfully'
+                taskMoved: 'Task moved successfully',
+                settingsSuccess: 'Settings saved'
             },
 
             error: {
@@ -244,7 +245,8 @@ export const translations = {
                 taskCreated: 'Zadanie zostało utworzone pomyślnie',
                 taskUpdated: 'Zadanie zostało zaktualizowane pomyślnie',
                 taskDeleted: 'Zadanie zostało usunięte pomyślnie',
-                taskMoved: 'Zadanie zostało przeniesione pomyślnie'
+                taskMoved: 'Zadanie zostało przeniesione pomyślnie',
+                settingsSuccess: 'Zapisano ustawienia'
             },
 
             error: {
@@ -391,7 +393,8 @@ export const translations = {
                 taskCreated: 'Aufgabe erfolgreich erstellt',
                 taskUpdated: 'Aufgabe erfolgreich aktualisiert',
                 taskDeleted: 'Aufgabe erfolgreich gelöscht',
-                taskMoved: 'Aufgabe erfolgreich verschoben'
+                taskMoved: 'Aufgabe erfolgreich verschoben',
+                settingsSuccess: 'Einstellungen erfolgreich gespeichert'
             },
 
             error: {

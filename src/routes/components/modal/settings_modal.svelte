@@ -1,22 +1,26 @@
 <script lang="ts">
-  import { currentLanguage, setLanguage, translate } from '$lib/features';
+import { currentLanguage, setLanguage, translate } from '$lib/features';
+import { toastActions } from '$lib/features';
 
 let { isOpen = $bindable(), onClose,} = $props<{
   isOpen?: boolean;
   onClose?: () => void;
 }>();
 
+let selectedLanguage = $state($currentLanguage);
 
-async function saveSettings() {
-    onClose();
+function saveSettings() {
+  setLanguage(selectedLanguage);
+  toastActions.success($translate.toasts.success.settingsSuccess);
+  onClose();
 }
 
-function handleLanguageChange(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    setLanguage(target.value as 'en' | 'pl' | 'de');
+function resetSettings() {
+  selectedLanguage = $currentLanguage;
 }
 
 function closeModal() {
+  resetSettings();
   onClose?.();
 }
 </script>
@@ -56,10 +60,9 @@ function closeModal() {
           <div class="space-y-5">
             <label for="language-status" class="block text-sm font-medium text-slate-300 mb-2">{$translate.ui.language}</label>
             <select 
-            bind:value={$currentLanguage} 
-            onchange={handleLanguageChange}
-            class="p-3 bg-slate-700/60 border border-purple-400/30 rounded-lg text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all"
-            >
+              bind:value={selectedLanguage}
+              class="bg-slate-700/60 border border-purple-400/30 rounded-lg text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 transition-all"
+              >
                 <option value="en">🇬🇧 English</option>
                 <option value="pl">🇵🇱 Polski</option>
                 <option value="de">🇩🇪 Deutsch</option>
