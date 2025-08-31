@@ -23,10 +23,10 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "targets": ["rpm", "msi"],
     "icon": [
-      "icons/favicon.svg",
-      "icons/favicon-96x96.png"
+      "icons/favicon-96x96.png",
+      "icons/favicon.ico"
     ]
   }
 }
