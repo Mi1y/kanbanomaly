@@ -1,5 +1,5 @@
 import { writable, derived, get } from 'svelte/store';
-import { taskApi } from './api.js';
+import { taskApi } from './api';
 import type { 
   Task, 
   TaskColumns, 
@@ -7,9 +7,9 @@ import type {
   TaskStatus,
   CreateTaskData, 
   UpdateTaskData 
-} from './interfaces.js';
-import { getTranslation } from '../translator/store.js';
-import { toastActions } from '../toasts/store.js';
+} from './interfaces';
+import { getTranslation } from '../translator/store';
+import { toastActions } from '../toasts/store';
 
 const _tasks = writable<Task[]>([]);
 const _loading = writable(false);

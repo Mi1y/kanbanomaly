@@ -1,14 +1,14 @@
 import { writable, derived } from 'svelte/store';
-import { projectApi } from './api.js';
+import { projectApi } from './api';
 import type { 
   Project, 
   ProjectView, 
   ProjectSummary,
   CreateProjectData, 
   UpdateProjectData, 
-} from './interfaces.js';
+} from './interfaces';
 import { getTranslation } from '../translator/store';
-import { toastActions } from '../toasts/store.js';
+import { toastActions } from '../toasts/store';
 
 const _projects = writable<Project[]>([]);
 const _selectedProjectId = writable<number | null>(null);

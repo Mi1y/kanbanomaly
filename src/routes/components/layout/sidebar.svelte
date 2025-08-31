@@ -90,7 +90,7 @@
     projectActions.loadAll();
   });
 </script>
-<div class="{showSidebar ? 'w-64' : 'w-10'} p-4 bg-blue-50 flex flex-col relative dark:bg-gray-800 border-l border-blue-200 dark:border-gray-700 overflow-y-auto overflow-x-hidden transition-all duration-300 ease-in-out">
+<div class="{showSidebar ? 'w-64' : 'w-10'} p-4 bg-gray-800 flex flex-col relative border-l border-blue-200 dark:border-gray-700 overflow-y-auto overflow-x-hidden transition-all duration-300 ease-in-out">
 <button
   class="absolute right-1 p-2 rounded-full bg-slate-700/60 hover:bg-slate-600 text-slate-300 hover:text-white transition-all duration-200 z-20"
   onclick={toggleSidebar}
@@ -353,7 +353,7 @@
           <!-- <label for="settings-status" class="text-sm font-medium text-slate-300">Settings</label> -->
       </button>
 
-      <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 font-medium">
+      <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 font-bold">
         <p>💻 Made by Mi1y</p>
       </span>
     </div>

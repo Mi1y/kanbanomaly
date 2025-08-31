@@ -1,5 +1,5 @@
 import { supabase } from '../../database/supabase';
-import type { Project, CreateProjectData, UpdateProjectData } from './interfaces.js';
+import type { Project, CreateProjectData, UpdateProjectData } from './interfaces';
 
 export const projectApi = {
   async getAll(): Promise<Project[]> {
