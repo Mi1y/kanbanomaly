@@ -101,7 +101,8 @@ async function deleteTask(taskId: number) {
     }
 }
 
-function handleDragStart(taskId: number, statusColumnKey: TaskStatus) {
+function handleDragStart(event: DragEvent, taskId: number, statusColumnKey: TaskStatus) {
+    event.dataTransfer!.setData('text/plain', taskId.toString());
     draggedTaskId = taskId;
     dragSourceColumn = statusColumnKey;
 }
@@ -110,17 +111,22 @@ function handleDragOver(event: DragEvent) {
     event.preventDefault();
 }
 
-async function handleDrop(targetColId: TaskStatus) {
-    if (draggedTaskId && dragSourceColumn && dragSourceColumn !== targetColId) {
+async function handleDrop(event: DragEvent, targetColId: TaskStatus) {
+  event.preventDefault();
+    
+  if (draggedTaskId && dragSourceColumn && dragSourceColumn !== targetColId) {
         try {
             await taskActions.move(draggedTaskId, dragSourceColumn, targetColId);
-        } catch {
+            toastActions.success($translate.toasts.success.taskMoved);
+          } catch {
             toastActions.error($translate.toasts.error.taskMoveFailed);
         }
     }
     draggedTaskId = null;
     dragSourceColumn = null;
+    dragOverColumn = null;
 }
+
 function handleDragLeave(event: DragEvent) {
     if (event.currentTarget && !(event.currentTarget as HTMLElement).contains(event.relatedTarget as Node)) {
       dragOverColumn = null;
@@ -227,7 +233,7 @@ $effect(() => {
       role="group"
       ondragover={(e) => { handleDragOver(e); dragOverColumn = statusColumnKey as TaskStatus; }}
       ondragleave={handleDragLeave}
-      ondrop={() => { handleDrop(statusColumnKey as TaskStatus); dragOverColumn = null; }}
+      ondrop={(e) => { handleDrop(e, statusColumnKey as TaskStatus); dragOverColumn = null; }}
       >
           <div class="p-4 border-b border-slate-700/50 bg-gradient-to-r {
             statusColumnKey === 'todo' ? 'from-yellow-600/20 to-orange-600/20' : 
@@ -265,7 +271,7 @@ $effect(() => {
                   'bg-gradient-to-br from-emerald-500/10 to-green-500/10 hover:from-emerald-500/20 hover:to-green-500/20'
                 } group/task`}
                 draggable="true"
-                ondragstart={() => handleDragStart(task.id, statusColumnKey as TaskStatus)}
+                ondragstart={(e) => handleDragStart(e, task.id, statusColumnKey as TaskStatus)}
                 role="button"
                 tabindex="0"
               >
