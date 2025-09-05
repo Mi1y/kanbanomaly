@@ -8,8 +8,8 @@ import type {
   CreateTaskData, 
   UpdateTaskData 
 } from './interfaces';
-import { getTranslation } from '../translator/store';
-import { toastActions } from '../toasts/store';
+import { getTranslation } from '$lib';
+import { toastActions } from '$lib';
 
 const _tasks = writable<Task[]>([]);
 const _loading = writable(false);

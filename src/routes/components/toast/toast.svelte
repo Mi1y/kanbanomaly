@@ -1,5 +1,5 @@
 <script lang="ts">
-import { toasts, toastActions, translate } from "$lib/features";
+import { toasts, toastActions, translate } from "$lib";
 import { fly } from 'svelte/transition';
 
 let hoveredToastId= $state<string | null>(null);

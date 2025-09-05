@@ -1,6 +1,8 @@
 <script lang="ts">
 import KanbanBoard from '../kanban_board.svelte';
-import { selectedProjectId, translate } from '$lib/features';
+import { translate } from '$lib';
+import { selectedProjectId } from '$lib/supabase';
+
 </script>
 
 <div class="flex-1 overflow-y-auto bg-slate-900/50 custom-scrollbar">

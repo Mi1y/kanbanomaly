@@ -7,8 +7,8 @@ import type {
   CreateProjectData, 
   UpdateProjectData, 
 } from './interfaces';
-import { getTranslation } from '../translator/store';
-import { toastActions } from '../toasts/store';
+import { getTranslation } from '$lib';
+import { toastActions } from '$lib';
 
 const _projects = writable<Project[]>([]);
 const _selectedProjectId = writable<number | null>(null);

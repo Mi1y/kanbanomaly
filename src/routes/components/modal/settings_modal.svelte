@@ -1,6 +1,5 @@
 <script lang="ts">
-import { currentLanguage, setLanguage, translate } from '$lib/features';
-import { toastActions } from '$lib/features';
+import { currentLanguage, setLanguage, translate, toastActions } from '$lib';
 
 let { isOpen = $bindable(), onClose,} = $props<{
   isOpen?: boolean;

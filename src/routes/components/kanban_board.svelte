@@ -1,18 +1,17 @@
 <script lang="ts">
+import { toastActions, translate } from '$lib';
 import { 
   selectedProject, 
   selectedProjectId,
   taskColumns, 
   tasksLoading, 
   taskActions,
-  toastActions,
   type CreateTaskData,
   type TaskStatus,
   type TaskLevel,
   type TaskView,
   projectActions,
-  translate
-} from '$lib/features';
+} from '$lib/supabase';
 import DeadlineBar from './deadline_bar.svelte';
 
 let newTaskTitle = $state('');
@@ -102,6 +101,7 @@ async function deleteTask(taskId: number) {
 }
 
 function handleDragStart(event: DragEvent, taskId: number, statusColumnKey: TaskStatus) {
+    // draggable ="true" is buggy in Tauri, so we set it manually
     event.dataTransfer!.setData('text/plain', taskId.toString());
     draggedTaskId = taskId;
     dragSourceColumn = statusColumnKey;
@@ -269,7 +269,7 @@ $effect(() => {
                   statusColumnKey === 'todo' ? 'bg-gradient-to-br from-yellow-500/10 to-orange-500/10 hover:from-yellow-500/20 hover:to-orange-500/20' : 
                   statusColumnKey === 'doing' ? 'bg-gradient-to-br from-blue-500/10 to-cyan-500/10 hover:from-blue-500/20 hover:to-cyan-500/20' : 
                   'bg-gradient-to-br from-emerald-500/10 to-green-500/10 hover:from-emerald-500/20 hover:to-green-500/20'
-                } group/task`}
+                } group/task`}    
                 draggable="true"
                 ondragstart={(e) => handleDragStart(e, task.id, statusColumnKey as TaskStatus)}
                 role="button"

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { translate } from '$lib/features';
+  import { translate } from '$lib';
 
   let { newProjectStartDate, newProjectEndDate } = $props<{
     newProjectStartDate: Date | null;

@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import ProjectModal from '../modal/project_modal.svelte';
   import SettingsModal from '../modal/settings_modal.svelte';
+  import { translate, toastActions } from '$lib';
   import { 
   projectList, 
   selectedProjectId, 
@@ -10,9 +11,7 @@
   type UpdateProjectData,
   type ProjectView,
   type ProjectSummary,
-  toastActions,
-  translate
-} from '$lib/features';
+} from '$lib/supabase';
 
   let showSidebar = $state(true);
   let newProjectModalOpen = $state(false);
