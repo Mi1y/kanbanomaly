@@ -27,10 +27,10 @@ let draggedTaskId = $state<number | null>(null);
 let dragSourceColumn = $state<TaskStatus | null>(null);  
 let dragOverColumn = $state<TaskStatus | null>(null); 
 
-function formatDate(dateStr: string | null): string {
-    if (!dateStr) return '';
-    const date = new Date(dateStr);
-    return date.toLocaleDateString();
+function formatDate(dateVal: Date | string | null): string {
+    if (!dateVal) return '';
+    const date = typeof dateVal === 'string' ? new Date(dateVal) : dateVal;
+    return isNaN(date.getTime()) ? '' : date.toLocaleDateString();
 }
 
 async function addNewTask() {
