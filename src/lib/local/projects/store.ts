@@ -1,11 +1,11 @@
 import { writable, derived } from 'svelte/store';
 import { localProjectApi } from './api';
-import type { 
-  Project, 
-  ProjectView, 
+import type {
+  Project,
+  ProjectView,
   ProjectSummary,
-  CreateProjectData, 
-  UpdateProjectData, 
+  CreateProjectData,
+  UpdateProjectData,
 } from './interfaces';
 import { getTranslation, toastActions } from '$lib';
 
@@ -16,11 +16,11 @@ const _loading = writable(false);
 
 export const localProjectsLoading = { subscribe: _loading.subscribe };
 
-export const localProjectList = derived(_projects, (projects): ProjectSummary[] => 
+export const localProjectList = derived(_projects, (projects): ProjectSummary[] =>
   projects.map(p => ({ id: p.id, title: p.title, status: p.status }))
 );
 
-export const localSelectedProject = derived(_selectedProject, (project): ProjectView | null => 
+export const localSelectedProject = derived(_selectedProject, (project): ProjectView | null =>
   project ? {
     id: project.id,
     title: project.title,
@@ -64,7 +64,7 @@ export const localProjectActions = {
 
   async select(projectId: string | null) {
     _selectedProjectId.set(projectId);
-    
+
     if (!projectId) {
       _selectedProject.set(null);
       return;
@@ -97,10 +97,10 @@ export const localProjectActions = {
     _loading.set(true);
     try {
       await localProjectApi.update(projectId, updates);
-      _projects.update(projects => 
+      _projects.update(projects =>
         projects.map(p => p.id === projectId ? { ...p, ...updates } : p)
       );
-      _selectedProject.update(current => 
+      _selectedProject.update(current =>
         current?.id === projectId ? { ...current, ...updates } : current
       );
     } catch {
@@ -115,13 +115,13 @@ export const localProjectActions = {
     _loading.set(true);
     try {
       await localProjectApi.delete(projectId);
-      _projects.update(projects => 
+      _projects.update(projects =>
         projects.filter(project => project.id !== projectId)
       );
-      _selectedProjectId.update(current => 
+      _selectedProjectId.update(current =>
         current === projectId ? null : current
       );
-      _selectedProject.update(current => 
+      _selectedProject.update(current =>
         current?.id === projectId ? null : current
       );
     } catch {
