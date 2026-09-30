@@ -1,14 +1,26 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { env } from '$env/dynamic/public';
 
-// production environment variables
-// import { env } from '$env/dynamic/private';
+const defaultUrl = env.PUBLIC_SUPABASE_URL || 'placeholder-url';
+const defaultKey = env.PUBLIC_SUPABASE_KEY || 'placeholder-key';
 
-const supabaseUrl = env.PUBLIC_SUPABASE_URL;
-const supabaseKey = env.PUBLIC_SUPABASE_KEY;
+let clientInstance = createClient(defaultUrl, defaultKey);
 
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error("Supabase URL and Key must be set in environment variables");
+export function getSupabaseClient(): SupabaseClient {
+  if (typeof localStorage !== 'undefined') {
+    const customUrl = localStorage.getItem('customSupabaseUrl');
+    const customKey = localStorage.getItem('customSupabaseAnonKey');
+    if (customUrl && customKey) {
+      return createClient(customUrl, customKey);
+    }
+  }
+  return clientInstance;
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export const supabase: SupabaseClient<any, 'public', any> = new Proxy({} as SupabaseClient<any, 'public', any>, {
+  get(_target, prop) {
+    const client = getSupabaseClient() as any;
+    return client[prop];
+  }
+});
+

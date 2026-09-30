@@ -2,8 +2,8 @@
   import { translate } from '$lib';
 
   let { newProjectStartDate, newProjectEndDate } = $props<{
-    newProjectStartDate: Date | null;
-    newProjectEndDate: Date | null;
+    newProjectStartDate: Date | string | null;
+    newProjectEndDate: Date | string | null;
   }>();
 
   let days = $state(0);

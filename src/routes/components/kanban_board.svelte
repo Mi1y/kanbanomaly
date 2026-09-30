@@ -1,29 +1,31 @@
 <script lang="ts">
-import { toastActions, translate } from '$lib';
 import { 
+  toastActions, 
+  translate,
   selectedProject, 
   selectedProjectId,
   taskColumns, 
   tasksLoading, 
   taskActions,
-  type CreateTaskData,
-  type TaskStatus,
-  type TaskLevel,
-  type TaskView,
   projectActions,
-} from '$lib/supabase';
+} from '$lib';
+import type { 
+  UnifiedCreateTaskData as CreateTaskData,
+  UnifiedTaskView as TaskView,
+} from '$lib';
+import type { TaskStatus, TaskLevel } from '$lib/local/tasks/interfaces';
 import DeadlineBar from './deadline_bar.svelte';
 
 let newTaskTitle = $state('');
 let newTaskStatus = $state<TaskStatus>('todo');
 let newTaskLevel = $state<TaskLevel>('medium');
 
-let editingTaskId = $state<number | null>(null);
+let editingTaskId = $state<string | null>(null);
 let editTaskTitle = $state('');
 let editTaskLevel = $state<TaskLevel>('medium'); 
 
 // Drag & drop
-let draggedTaskId = $state<number | null>(null);
+let draggedTaskId = $state<string | null>(null);
 let dragSourceColumn = $state<TaskStatus | null>(null);  
 let dragOverColumn = $state<TaskStatus | null>(null); 
 
@@ -34,7 +36,7 @@ function formatDate(dateVal: Date | string | null): string {
 }
 
 async function addNewTask() {
-    if (!newTaskTitle.trim() || !selectedProjectId) {
+    if (!newTaskTitle.trim() || !$selectedProjectId) {
     toastActions.warning($translate.toasts.validation.enterTaskName);
     return;
     }
@@ -44,7 +46,7 @@ async function addNewTask() {
             title: newTaskTitle,
             status: newTaskStatus,
             level: newTaskLevel,
-            project_id: $selectedProjectId || 0
+            project_id: $selectedProjectId
         };
         await taskActions.create(data);
         projectActions.loadAll();
@@ -88,7 +90,7 @@ function cancelTaskEdit() {
     editTaskLevel = 'medium';
 }
 
-async function deleteTask(taskId: number) {
+async function deleteTask(taskId: string) {
   const confirmed = await toastActions.confirm($translate.toasts.confirm.deleteTask);
   if (!confirmed) return;
     try {
@@ -100,9 +102,9 @@ async function deleteTask(taskId: number) {
     }
 }
 
-function handleDragStart(event: DragEvent, taskId: number, statusColumnKey: TaskStatus) {
+function handleDragStart(event: DragEvent, taskId: string, statusColumnKey: TaskStatus) {
     // draggable ="true" is buggy in Tauri, so we set it manually
-    event.dataTransfer!.setData('text/plain', taskId.toString());
+    event.dataTransfer!.setData('text/plain', taskId);
     draggedTaskId = taskId;
     dragSourceColumn = statusColumnKey;
 }

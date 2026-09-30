@@ -2,23 +2,24 @@
   import { onMount } from 'svelte';
   import ProjectModal from '../modal/project_modal.svelte';
   import SettingsModal from '../modal/settings_modal.svelte';
-  import { translate, toastActions } from '$lib';
   import { 
-  projectList, 
-  selectedProjectId, 
-  projectActions,
-  type CreateProjectData,
-  type UpdateProjectData,
-  type ProjectView,
-  type ProjectSummary,
-} from '$lib/supabase';
+    translate, 
+    toastActions,
+    projectList, 
+    selectedProjectId, 
+    projectActions,
+    type UnifiedCreateProjectData as CreateProjectData,
+    type UnifiedUpdateProjectData as UpdateProjectData,
+    type UnifiedProjectView as ProjectView,
+    type UnifiedProjectSummary as ProjectSummary,
+  } from '$lib';
 
   let showSidebar = $state(true);
   let newProjectModalOpen = $state(false);
   let settingsModalOpen = $state(false);
   let projectToEdit: ProjectView | null = $state(null);
   
-  function selectProject(projectId: number) {
+  function selectProject(projectId: string) {
     projectActions.select(projectId);
   }
 
@@ -67,7 +68,7 @@
         projectActions.loadAll();
     closeNewProjectModal();
   }
-  async function deleteProject(projectId: number) {
+  async function deleteProject(projectId: string) {
        const confirmed = await toastActions.confirm($translate.toasts.confirm.deleteProject);
     if (!confirmed) return;
       try {

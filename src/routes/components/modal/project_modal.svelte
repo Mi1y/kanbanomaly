@@ -1,10 +1,10 @@
 <script lang="ts">
 import { translate, toastActions } from '$lib';
-import { 
-  type CreateProjectData, 
-  type UpdateProjectData, 
-  type ProjectView, 
-} from '$lib/supabase';
+import type { 
+  UnifiedCreateProjectData as CreateProjectData, 
+  UnifiedUpdateProjectData as UpdateProjectData, 
+  UnifiedProjectView as ProjectView, 
+} from '$lib';
 
 let {isOpen = $bindable(), onProjectCreated, onClose, projectEdit = null} = $props<{
   isOpen?: boolean;

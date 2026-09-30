@@ -1,7 +1,7 @@
 <script lang="ts">
 import KanbanBoard from '../kanban_board.svelte';
 import { translate } from '$lib';
-import { selectedProjectId } from '$lib/supabase';
+import { selectedProjectId } from '$lib';
 
 </script>
 

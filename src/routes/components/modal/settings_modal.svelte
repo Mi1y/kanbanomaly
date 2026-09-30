@@ -1,21 +1,50 @@
 <script lang="ts">
-import { currentLanguage, setLanguage, translate, toastActions } from '$lib';
+import { 
+  currentLanguage, 
+  setLanguage, 
+  translate, 
+  toastActions,
+  dataSource,
+  customSupabaseUrl,
+  customSupabaseAnonKey,
+  projectActions,
+  taskActions,
+} from '$lib';
+import type { DataSource } from '$lib';
 
-let { isOpen = $bindable(), onClose,} = $props<{
+let { isOpen = $bindable(), onClose } = $props<{
   isOpen?: boolean;
   onClose?: () => void;
 }>();
 
 let selectedLanguage = $state($currentLanguage);
+let selectedDataSource = $state<DataSource>($dataSource);
+let supabaseUrlVal = $state($customSupabaseUrl);
+let supabaseKeyVal = $state($customSupabaseAnonKey);
 
-function saveSettings() {
+async function saveSettings() {
   setLanguage(selectedLanguage);
+
+  const sourceChanged = selectedDataSource !== $dataSource;
+  dataSource.set(selectedDataSource);
+  customSupabaseUrl.set(supabaseUrlVal.trim());
+  customSupabaseAnonKey.set(supabaseKeyVal.trim());
+
+  if (sourceChanged) {
+    projectActions.select(null);
+    taskActions.loadForProject(null);
+    await projectActions.loadAll();
+  }
+
   toastActions.success($translate.toasts.success.settingsSuccess);
-  onClose();
+  onClose?.();
 }
 
 function resetSettings() {
   selectedLanguage = $currentLanguage;
+  selectedDataSource = $dataSource;
+  supabaseUrlVal = $customSupabaseUrl;
+  supabaseKeyVal = $customSupabaseAnonKey;
 }
 
 function closeModal() {
@@ -66,9 +95,56 @@ function closeModal() {
                 <option value="pl">🇵🇱 Polski</option>
                 <option value="de">🇩🇪 Deutsch</option>
             </select>
-            <div class="grid grid-cols-2 gap-4">
-
+            <div>
+              <label for="storage-mode" class="block text-sm font-medium text-slate-300 mb-2">
+                {$translate.ui.storageMode || 'Storage Mode'}
+              </label>
+              <div class="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onclick={() => selectedDataSource = 'local'}
+                  class="px-4 py-2.5 rounded-lg text-sm font-medium border transition-all {selectedDataSource === 'local' ? 'bg-purple-600/30 border-purple-500 text-white' : 'bg-slate-700/40 border-slate-600 text-slate-400 hover:text-white'}"
+                >
+                  Local (Files)
+                </button>
+                <button
+                  type="button"
+                  onclick={() => selectedDataSource = 'supabase'}
+                  class="px-4 py-2.5 rounded-lg text-sm font-medium border transition-all {selectedDataSource === 'supabase' ? 'bg-purple-600/30 border-purple-500 text-white' : 'bg-slate-700/40 border-slate-600 text-slate-400 hover:text-white'}"
+                >
+                  Supabase
+                </button>
+              </div>
             </div>
+
+            {#if selectedDataSource === 'supabase'}
+              <div class="space-y-3 pt-2 border-t border-slate-700/50">
+                <div>
+                  <label for="supabase-url" class="block text-xs font-medium text-slate-400 mb-1">
+                    Supabase Project URL
+                  </label>
+                  <input
+                    id="supabase-url"
+                    type="text"
+                    bind:value={supabaseUrlVal}
+                    placeholder="https://xyz.supabase.co"
+                    class="w-full px-3 py-2 bg-slate-700/60 border border-slate-600 rounded-lg text-white text-sm focus:border-purple-400 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label for="supabase-anon" class="block text-xs font-medium text-slate-400 mb-1">
+                    Supabase Anon Key
+                  </label>
+                  <input
+                    id="supabase-anon"
+                    type="password"
+                    bind:value={supabaseKeyVal}
+                    placeholder="eyJhbGciOi..."
+                    class="w-full px-3 py-2 bg-slate-700/60 border border-slate-600 rounded-lg text-white text-sm focus:border-purple-400 focus:outline-none"
+                  />
+                </div>
+              </div>
+            {/if}
               <div class="flex justify-end gap-3 pt-6">
                 <button
                   onclick={closeModal}

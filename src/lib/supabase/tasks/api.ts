@@ -2,7 +2,7 @@ import { supabase } from '../../database/supabase';
 import type { Task, CreateTaskData, UpdateTaskData } from './interfaces';
 
 export const taskApi = {
-  async getByProject(projectId: number): Promise<Task[]> {
+  async getByProject(projectId: string): Promise<Task[]> {
     const { data, error } = await supabase
       .from("tasks")
       .select("*")
@@ -26,7 +26,7 @@ export const taskApi = {
     return data;
   },
 
-  async update(taskId: number, updates: UpdateTaskData): Promise<void> {
+  async update(taskId: string, updates: UpdateTaskData): Promise<void> {
     const { error } = await supabase
       .from('tasks')
       .update(updates)
@@ -35,7 +35,7 @@ export const taskApi = {
     if (error) throw error;
   },
 
-  async delete(taskId: number): Promise<void> {
+  async delete(taskId: string): Promise<void> {
     const { error } = await supabase
       .from('tasks')
       .delete()
@@ -44,7 +44,7 @@ export const taskApi = {
     if (error) throw error;
   },
 
-  async updatedAt(projectId: number): Promise<void> {
+  async updatedAt(projectId: string): Promise<void> {
     const { error } = await supabase
       .from('projects')
       .update({ updated_at: new Date().toISOString() })

@@ -17,3 +17,12 @@ export {
 } from './features/translator/store';
 
 export type { Language } from './features/translator/store';
+
+export {
+  dataSource,
+  customSupabaseUrl,
+  customSupabaseAnonKey,
+  type DataSource
+} from './features/settings/store';
+
+export * from './share';

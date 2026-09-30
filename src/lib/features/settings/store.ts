@@ -1,7 +1,34 @@
 import { writable } from 'svelte/store';
 
-const local = $state('local');
-const supabase = $state('supabase');
-type DataSource = typeof local | typeof supabase;
+export type DataSource = 'local' | 'supabase';
 
-export const dataSource = writable<DataSource>('local');
+const initialDataSource: DataSource =
+  (typeof localStorage !== 'undefined' && (localStorage.getItem('dataSource') as DataSource)) || 'local';
+
+export const dataSource = writable<DataSource>(initialDataSource);
+
+if (typeof localStorage !== 'undefined') {
+  dataSource.subscribe((val) => {
+    localStorage.setItem('dataSource', val);
+  });
+}
+
+export const customSupabaseUrl = writable<string>(
+  (typeof localStorage !== 'undefined' && localStorage.getItem('customSupabaseUrl')) || ''
+);
+
+export const customSupabaseAnonKey = writable<string>(
+  (typeof localStorage !== 'undefined' && localStorage.getItem('customSupabaseAnonKey')) || ''
+);
+
+if (typeof localStorage !== 'undefined') {
+  customSupabaseUrl.subscribe(val => {
+    if (val) localStorage.setItem('customSupabaseUrl', val);
+    else localStorage.removeItem('customSupabaseUrl');
+  });
+
+  customSupabaseAnonKey.subscribe(val => {
+    if (val) localStorage.setItem('customSupabaseAnonKey', val);
+    else localStorage.removeItem('customSupabaseAnonKey');
+  });
+}
