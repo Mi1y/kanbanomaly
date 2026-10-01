@@ -1,5 +1,5 @@
 export interface Project {
-  id: number;
+  id: string;
   title: string;
   status: string;
   start_date: Date | null; 
@@ -21,7 +21,7 @@ export interface UpdateProjectData {
 }
 
 export interface ProjectView {
-  id: number;
+  id: string;
   title: string;
   status: string;
   start_date: Date | null;
@@ -29,7 +29,7 @@ export interface ProjectView {
 }
 
 export interface ProjectSummary {
-  id: number;
+  id: string;
   title: string;
   status: string;
 }

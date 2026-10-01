@@ -1,18 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%sveltekit.assets%/favicon.ico" />
-    <link rel="icon" type="image/png" href="%sveltekit.assets%/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="%sveltekit.assets%/favicon.svg" />
-    <link rel="shortcut icon" href="%sveltekit.assets%/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="%sveltekit.assets%/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="Kanbanomaly" />
-    <link rel="manifest" href="%sveltekit.assets%/site.webmanifest" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    %sveltekit.head%
-  </head>
-  <body data-sveltekit-preload-data="hover">
-    <div style="display: contents">%sveltekit.body%</div>
-  </body>
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%sveltekit.assets%/favicon.ico" />
+  <link rel="icon" type="image/png" href="%sveltekit.assets%/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="%sveltekit.assets%/favicon.svg" />
+  <link rel="shortcut icon" href="%sveltekit.assets%/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="%sveltekit.assets%/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="Kanbanomaly" />
+  <link rel="manifest" href="%sveltekit.assets%/site.webmanifest" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    try {
+      const savedSize = localStorage.getItem('userFontSize');
+      if (savedSize) {
+        const parsed = parseInt(savedSize, 10);
+        if (parsed && parsed >= 12 && parsed <= 24) {
+          document.documentElement.style.fontSize = parsed + 'px';
+        }
+      } else {
+        document.documentElement.style.fontSize = '18px';
+      }
+    } catch (_) { }
+  </script>
+
+  %sveltekit.head%
+</head>
+
+<body data-sveltekit-preload-data="hover">
+  <div style="display: contents">%sveltekit.body%</div>
+</body>
+
 </html>

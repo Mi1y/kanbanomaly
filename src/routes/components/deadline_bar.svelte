@@ -1,24 +1,26 @@
 <script lang="ts">
-  import { translate } from '$lib/features';
+  import { translate } from '$lib';
 
   let { newProjectStartDate, newProjectEndDate } = $props<{
-    newProjectStartDate: Date | null;
-    newProjectEndDate: Date | null;
+    newProjectStartDate: Date | string | null;
+    newProjectEndDate: Date | string | null;
   }>();
 
   let days = $state(0);
   let hours = $state(0);
   let minutes = $state(0);
-  let maskWidth = $state(0);
+  let percentElapsed = $state(0);
 
   function calculateTimeLeft() {
-    const now = new Date();
-    const end = new Date(newProjectEndDate);
-    const diff = end.getTime() - now.getTime();
+    if (!newProjectStartDate || !newProjectEndDate) return;
+    const now = new Date().getTime();
+    const start = new Date(newProjectStartDate).getTime();
+    const end = new Date(newProjectEndDate).getTime();
+    const diff = end - now;
 
-    if (diff <= 0 ) {
+    if (diff <= 0) {
       days = hours = minutes = 0;
-      maskWidth = 100;
+      percentElapsed = 100;
       return;
     }
 
@@ -27,10 +29,13 @@
     hours = Math.floor((totalMinutes % (60 * 24)) / 60);
     minutes = totalMinutes % 60;
 
-    const start = new Date(newProjectStartDate).getTime();
-    const total = new Date(newProjectEndDate).getTime() - start;
-    const elapsed = now.getTime() - start;
-    maskWidth = Math.min((elapsed / total) * 100, 100);
+    const totalDuration = end - start;
+    const elapsed = now - start;
+    if (totalDuration > 0) {
+      percentElapsed = Math.min(Math.max((elapsed / totalDuration) * 100, 0), 100);
+    } else {
+      percentElapsed = 100;
+    }
   }
 
   $effect(() => {
@@ -38,69 +43,44 @@
     const interval = setInterval(calculateTimeLeft, 60_000);
     return () => clearInterval(interval);
   });
-  
 </script>
 
 {#if newProjectStartDate && newProjectEndDate}
-  <div class="bg-slate-800/60 rounded-xl lg:p-8 border border-purple-500/20 relative overflow-hidden">
-    <div class="relative">
-      <div class="flex items-center justify-center gap-3 mb-6">
-        <div class="w-3 h-3 rounded-full {days <= 7 ? 'bg-red-400' : days <= 30 ? 'bg-yellow-400' : 'bg-emerald-400'}"></div>
-        <h1 class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 tracking-wide">
+  <div class="rounded-xl border border-white/5 bg-[#0d0f17] p-4 mb-6 shadow-sm">
+    <div class="flex items-center justify-between mb-3">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full {days <= 3 ? 'bg-rose-400' : days <= 14 ? 'bg-amber-400' : 'bg-emerald-400'}"></span>
+        <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">
           {$translate.deadline.tracker}
-        </h1>
+        </h2>
       </div>
+      
+      <div class="text-[11px] font-mono text-zinc-400">
+        <span class="text-zinc-200 font-medium">{Math.round(percentElapsed)}%</span> elapsed
+      </div>
+    </div>
 
+    <div class="w-full h-2 rounded-full bg-white/5 border border-white/5 overflow-hidden mb-4">
       <div 
-        class="relative mx-auto w-full max-w-2xl h-12 bg-slate-700/70 rounded-full border border-slate-600/50 shadow-lg overflow-hidden"
-        style="box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), inset 0 -1px 2px rgba(255,255,255,0.05);"
-      >
-        <div
-          class="h-full transition-all duration-1000 ease-out rounded-full relative
-            {days > 0
-              ? 'bg-gradient-to-r from-emerald-500 to-cyan-500'
-              : maskWidth > 80
-              ? 'bg-gradient-to-r from-red-500 to-red-600'
-              : maskWidth > 60
-              ? 'bg-gradient-to-r from-orange-500 to-red-500'
-              : 'bg-gradient-to-r from-emerald-500 to-cyan-500'
-            }"
-          style="width: {maskWidth}%; 
-                  box-shadow: 
-                    0 1px 3px rgba(0,0,0,0.2),
-                    inset 0 1px 0 rgba(255,255,255,0.2),
-                    inset 0 -1px 0 rgba(0,0,0,0.1);
-                border-radius: 9999px;"
-        >
-          <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-b from-white/15 to-transparent rounded-full"></div>
-        </div>
+        class="h-full rounded-full transition-all duration-700 ease-out {percentElapsed > 90 ? 'bg-rose-500' : percentElapsed > 75 ? 'bg-amber-500' : 'bg-indigo-500'}"
+        style="width: {percentElapsed}%;"
+      ></div>
+    </div>
 
-        <div class="absolute top-1/2 right-3 transform -translate-y-1/2 text-2xl">
-          {#if days > 0}
-            👨‍💻
-          {:else}
-            <span class="text-red-400 animate-pulse">👻</span>
-          {/if}
-        </div>
+    <div class="grid grid-cols-3 gap-3">
+      <div class="bg-white/[0.02] border border-white/5 rounded-lg py-2 text-center">
+        <div class="text-lg font-semibold font-mono text-zinc-100">{days}</div>
+        <div class="text-[10px] text-zinc-500 uppercase tracking-wider">{$translate.deadline.days}</div>
       </div>
 
-      <div class="mt-6 text-center">
-        <div class="grid grid-cols-3 gap-4 max-w-md mx-auto">
-          <div class="bg-slate-700/50 rounded-lg p-3 border border-slate-600/50">
-            <div class="text-2xl font-bold text-white font-mono">{days}</div>
-            <div class="text-xs text-slate-400 uppercase tracking-wider">{$translate.deadline.days}</div>
-          </div>
+      <div class="bg-white/[0.02] border border-white/5 rounded-lg py-2 text-center">
+        <div class="text-lg font-semibold font-mono text-zinc-100">{hours}</div>
+        <div class="text-[10px] text-zinc-500 uppercase tracking-wider">{$translate.deadline.hours}</div>
+      </div>
 
-          <div class="bg-slate-700/50 rounded-lg p-3 border border-slate-600/50">
-            <div class="text-2xl font-bold text-white font-mono">{hours}</div>
-            <div class="text-xs text-slate-400 uppercase tracking-wider">{$translate.deadline.hours}</div>
-          </div>
-
-          <div class="bg-slate-700/50 rounded-lg p-3 border border-slate-600/50">
-            <div class="text-2xl font-bold text-white font-mono">{minutes}</div>
-            <div class="text-xs text-slate-400 uppercase tracking-wider">{$translate.deadline.minutes}</div>
-          </div>
-        </div>
+      <div class="bg-white/[0.02] border border-white/5 rounded-lg py-2 text-center">
+        <div class="text-lg font-semibold font-mono text-zinc-100">{minutes}</div>
+        <div class="text-[10px] text-zinc-500 uppercase tracking-wider">{$translate.deadline.minutes}</div>
       </div>
     </div>
   </div>

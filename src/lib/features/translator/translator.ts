@@ -17,12 +17,20 @@ export const translations = {
         // user interface
         ui: {
             settings: 'Settings',
-            language: 'Language'
+            language: 'Language',
+            storageMode: 'Storage Mode',
+            zoomHint: 'Zoom:',
+            backupAndData: 'Backup & Data',
+            exportAll: 'Export All Projects',
+            importJson: 'Import from JSON',
+            backupDescription: 'Export your boards as JSON or restore projects from a backup file.'
         },
         // sidebar
         sidebar: {
             createProject: 'Create New Project',
             projectsList: 'Projects',
+            importProject: 'Import JSON',
+            exportProject: 'Export Project',
             noProjects: 'No projects detected',
             openSettings: 'Open settings',
             collapse: 'Collapse sidebar',
@@ -39,7 +47,6 @@ export const translations = {
             status: 'Project Status',
             enter_project_name: 'Enter project name',
             noProjects: 'No projects detected',
-            
             statusLabels: {
                 active: 'Active',
                 inactive: 'Inactive',
@@ -60,7 +67,6 @@ export const translations = {
             deployNew: 'Deploy New Task',
             enterName: 'Enter task name',
             loading: 'Loading Tasks...',
-            
             columns: {
                 todo: 'TODO',
                 doing: 'IN PROGRESS',
@@ -97,7 +103,8 @@ export const translations = {
                 taskCreated: 'Task created successfully',
                 taskUpdated: 'Task updated successfully',
                 taskDeleted: 'Task deleted successfully',
-                taskMoved: 'Task moved successfully'
+                taskMoved: 'Task moved successfully',
+                settingsSuccess: 'Settings saved'
             },
 
             error: {
@@ -128,7 +135,11 @@ export const translations = {
                 projectSuffixUpdate: 'updated successfully',
                 projectSuffixSuccess: 'created successfully',
                 taskPrefix: 'Task',
-                taskSuffixSuccess: 'added successfully'
+                taskSuffixSuccess: 'added successfully',
+                exportSuccess: 'Project exported successfully',
+                backupSuccess: 'All projects exported successfully',
+                importSuccess: 'Successfully imported project(s)',
+                importFailed: 'Failed to import projects from JSON'
             }
         },
         // error
@@ -145,7 +156,6 @@ export const translations = {
             },
         }
     },
-    
     pl: {
         // global
         global: {
@@ -164,12 +174,20 @@ export const translations = {
         // user interface
         ui: {
             settings: 'Ustawienia',
-            language: 'Język'
+            language: 'Język',
+            storageMode: 'Tryb zapisu danych',
+            zoomHint: 'Zoom:',
+            backupAndData: 'Kopia zapasowa i dane',
+            exportAll: 'Eksportuj wszystkie projekty',
+            importJson: 'Importuj z pliku JSON',
+            backupDescription: 'Eksportuj tablice do pliku JSON lub przywróć projekty z kopii zapasowej.'
         },
         // sidebar
         sidebar: {
             createProject: 'Utwórz nowy projekt',
             projectsList: 'Projekty',
+            importProject: 'Importuj JSON',
+            exportProject: 'Eksportuj projekt',
             noProjects: 'Nie wykryto projektów',
             openSettings: 'Otwórz ustawienia',
             collapse: 'Zwiń pasek boczny',
@@ -186,7 +204,6 @@ export const translations = {
             status: 'Status projektu',
             enter_project_name: 'Wprowadź nazwę projektu',
             noProjects: 'Nie wykryto projektów',
-            
             statusLabels: {
                 active: 'Aktywny',
                 inactive: 'Nieaktywny',
@@ -207,7 +224,6 @@ export const translations = {
             deployNew: 'Wdróż nowe zadanie',
             enterName: 'Wprowadź nazwę zadania',
             loading: 'Ładowanie zadań...',
-            
             columns: {
                 todo: 'DO ZROBIENIA',
                 doing: 'W TRAKCIE',
@@ -244,7 +260,8 @@ export const translations = {
                 taskCreated: 'Zadanie zostało utworzone pomyślnie',
                 taskUpdated: 'Zadanie zostało zaktualizowane pomyślnie',
                 taskDeleted: 'Zadanie zostało usunięte pomyślnie',
-                taskMoved: 'Zadanie zostało przeniesione pomyślnie'
+                taskMoved: 'Zadanie zostało przeniesione pomyślnie',
+                settingsSuccess: 'Zapisano ustawienia'
             },
 
             error: {
@@ -275,7 +292,11 @@ export const translations = {
                 projectSuffixUpdate: 'zaktualizowano pomyślnie',
                 projectSuffixSuccess: 'utworzono pomyślnie',
                 taskPrefix: 'Zadanie',
-                taskSuffixSuccess: 'dodano pomyślnie'
+                taskSuffixSuccess: 'dodano pomyślnie',
+                exportSuccess: 'Projekt wyeksportowany pomyślnie',
+                backupSuccess: 'Wszystkie projekty wyeksportowane pomyślnie',
+                importSuccess: 'Pomyślnie zaimportowano projekty',
+                importFailed: 'Błąd podczas importu projektów z pliku JSON'
             }
         },
         // error
@@ -311,12 +332,20 @@ export const translations = {
         // user interface
         ui: {
             settings: 'Einstellungen',
-            language: 'Sprache'
+            language: 'Sprache',
+            storageMode: 'Speichermodus',
+            zoomHint: 'Zoom:',
+            backupAndData: 'Sicherung & Daten',
+            exportAll: 'Alle Projekte exportieren',
+            importJson: 'Aus JSON importieren',
+            backupDescription: 'Exportieren Sie Boards als JSON oder stellen Sie Projekte wieder her.'
         },
         // sidebar
         sidebar: {
             createProject: 'Neues Projekt erstellen',
             projectsList: 'Projekte',
+            importProject: 'JSON importieren',
+            exportProject: 'Projekt exportieren',
             noProjects: 'Keine Projekte erkannt',
             openSettings: 'Einstellungen öffnen',
             collapse: 'Seitenleiste zuklappen',
@@ -333,7 +362,6 @@ export const translations = {
             status: 'Projektstatus',
             enter_project_name: 'Projektname eingeben',
             noProjects: 'Keine Projekte erkannt',
-            
             statusLabels: {
                 active: 'Aktiv',
                 inactive: 'Inaktiv',
@@ -354,7 +382,6 @@ export const translations = {
             deployNew: 'Neue Aufgabe bereitstellen',
             enterName: 'Aufgabenname eingeben',
             loading: 'Lade Aufgaben...',
-            
             columns: {
                 todo: 'ZU ERLEDIGEN',
                 doing: 'IN BEARBEITUNG',
@@ -391,7 +418,8 @@ export const translations = {
                 taskCreated: 'Aufgabe erfolgreich erstellt',
                 taskUpdated: 'Aufgabe erfolgreich aktualisiert',
                 taskDeleted: 'Aufgabe erfolgreich gelöscht',
-                taskMoved: 'Aufgabe erfolgreich verschoben'
+                taskMoved: 'Aufgabe erfolgreich verschoben',
+                settingsSuccess: 'Einstellungen erfolgreich gespeichert'
             },
 
             error: {
@@ -422,7 +450,11 @@ export const translations = {
                 projectSuffixUpdate: 'erfolgreich aktualisiert',
                 projectSuffixSuccess: 'erfolgreich erstellt',
                 taskPrefix: 'Aufgabe',
-                taskSuffixSuccess: 'erfolgreich hinzugefügt'
+                taskSuffixSuccess: 'erfolgreich hinzugefügt',
+                exportSuccess: 'Projekt erfolgreich exportiert',
+                backupSuccess: 'Alle Projekte erfolgreich exportiert',
+                importSuccess: 'Projekte erfolgreich importiert',
+                importFailed: 'Fehler beim Importieren der Projekte'
             }
         },
         // error

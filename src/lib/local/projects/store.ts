@@ -1,27 +1,26 @@
 import { writable, derived } from 'svelte/store';
-import { projectApi } from './api.js';
-import type { 
-  Project, 
-  ProjectView, 
+import { localProjectApi } from './api';
+import type {
+  Project,
+  ProjectView,
   ProjectSummary,
-  CreateProjectData, 
-  UpdateProjectData, 
-} from './interfaces.js';
-import { getTranslation } from '../translator/store';
-import { toastActions } from '../toasts/store.js';
+  CreateProjectData,
+  UpdateProjectData,
+} from './interfaces';
+import { getTranslation, toastActions } from '$lib';
 
 const _projects = writable<Project[]>([]);
-const _selectedProjectId = writable<number | null>(null);
+const _selectedProjectId = writable<string | null>(null);
 const _selectedProject = writable<Project | null>(null);
 const _loading = writable(false);
 
-export const projectsLoading = { subscribe: _loading.subscribe };
+export const localProjectsLoading = { subscribe: _loading.subscribe };
 
-export const projectList = derived(_projects, (projects): ProjectSummary[] => 
+export const localProjectList = derived(_projects, (projects): ProjectSummary[] =>
   projects.map(p => ({ id: p.id, title: p.title, status: p.status }))
 );
 
-export const selectedProject = derived(_selectedProject, (project): ProjectView | null => 
+export const localSelectedProject = derived(_selectedProject, (project): ProjectView | null =>
   project ? {
     id: project.id,
     title: project.title,
@@ -31,15 +30,12 @@ export const selectedProject = derived(_selectedProject, (project): ProjectView 
   } : null
 );
 
-export const selectedProjectId = { subscribe: _selectedProjectId.subscribe };
+export const localSelectedProjectId = { subscribe: _selectedProjectId.subscribe };
 
-
-// ACTIONS
-export const projectActions = {
-
-  async getById(projectId: number): Promise<ProjectView | null> {
+export const localProjectActions = {
+  async getById(projectId: string): Promise<ProjectView | null> {
     try {
-      const project = await projectApi.getById(projectId);
+      const project = await localProjectApi.getById(projectId);
       return project ? {
         id: project.id,
         title: project.title,
@@ -56,7 +52,7 @@ export const projectActions = {
   async loadAll() {
     _loading.set(true);
     try {
-      const projects = await projectApi.getAll();
+      const projects = await localProjectApi.getAll();
       _projects.set(projects);
     } catch {
       toastActions.error(getTranslation('toasts.error.projectsLoadFailed'));
@@ -66,16 +62,16 @@ export const projectActions = {
     }
   },
 
-  async select(projectId: number | null) {
+  async select(projectId: string | null) {
     _selectedProjectId.set(projectId);
-    
+
     if (!projectId) {
       _selectedProject.set(null);
       return;
     }
 
     try {
-      const project = await projectApi.getById(projectId);
+      const project = await localProjectApi.getById(projectId);
       _selectedProject.set(project);
     } catch {
       toastActions.warning(getTranslation('toasts.error.projectLoadDetailsFailed'));
@@ -86,10 +82,8 @@ export const projectActions = {
   async create(data: CreateProjectData) {
     _loading.set(true);
     try {
-      const newProject = await projectApi.create(data);
-      _projects.update(projects =>
-         [...projects, newProject]
-        );
+      const newProject = await localProjectApi.create(data);
+      _projects.update(projects => [newProject, ...projects]);
       return newProject;
     } catch {
       toastActions.warning(getTranslation('toasts.error.projectCreateFailed'));
@@ -99,10 +93,16 @@ export const projectActions = {
     }
   },
 
-  async update(projectId: number, updates: UpdateProjectData) {
+  async update(projectId: string, updates: UpdateProjectData) {
     _loading.set(true);
     try {
-      await projectApi.update(projectId, updates);
+      await localProjectApi.update(projectId, updates);
+      _projects.update(projects =>
+        projects.map(p => p.id === projectId ? { ...p, ...updates } : p)
+      );
+      _selectedProject.update(current =>
+        current?.id === projectId ? { ...current, ...updates } : current
+      );
     } catch {
       toastActions.warning(getTranslation('toasts.error.projectUpdateFailed'));
       return null;
@@ -111,17 +111,17 @@ export const projectActions = {
     }
   },
 
-  async delete(projectId: number) {
+  async delete(projectId: string) {
     _loading.set(true);
     try {
-      await projectApi.delete(projectId);
-      _projects.update(projects => 
+      await localProjectApi.delete(projectId);
+      _projects.update(projects =>
         projects.filter(project => project.id !== projectId)
       );
-      _selectedProjectId.update(current => 
+      _selectedProjectId.update(current =>
         current === projectId ? null : current
       );
-      _selectedProject.update(current => 
+      _selectedProject.update(current =>
         current?.id === projectId ? null : current
       );
     } catch {

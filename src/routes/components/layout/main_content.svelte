@@ -1,33 +1,27 @@
 <script lang="ts">
-import KanbanBoard from '../kanban_board.svelte';
-import { selectedProjectId, translate } from '$lib/features';
+  import KanbanBoard from '../kanban_board.svelte';
+  import { translate, selectedProjectId } from '$lib';
 </script>
 
-<div class="flex-1 overflow-y-auto bg-slate-900/50 custom-scrollbar">
-  <main class="p-6 relative">
+<div class="flex-1 h-full overflow-y-auto bg-[#090a0f] custom-scrollbar">
+  <main class="h-full p-6 max-w-7xl mx-auto flex flex-col">
     {#if $selectedProjectId}
-      <KanbanBoard/>
+      <KanbanBoard />
     {:else}
-      <div class="bg-slate-800/60 p-12 rounded-xl text-center border border-purple-500/20 relative overflow-hidden">
-        <div class="bg-gradient-to-br from-purple-600/10 to-transparent rounded-xl"></div>
-        
-        <div class="relative">
-          <div class="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-purple-600/10 to-transparent rounded-full flex items-center justify-center">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-            </svg>
+      <div class="flex-1 flex items-center justify-center">
+        <div class="max-w-md w-full p-8 rounded-xl border border-white/5 bg-[#0d0f17] text-center shadow-xl shadow-black/20">
+          <div class="w-14 h-14 mx-auto mb-4 rounded-xl flex items-center justify-center">
+            <img src="/favicon.svg" alt="Kanbanomaly" class="w-14 h-14 object-contain" />
           </div>
-          <h2 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-4">
+          <h2 class="text-base font-semibold text-zinc-100 mb-1.5 tracking-tight">
             {$translate.main.welcome}
           </h2>
-          <p class="text-slate-400 text-lg mb-6 max-w-md mx-auto">
-            {$translate.main.description} ☕️
+          <p class="text-xs text-zinc-400 leading-relaxed mb-6">
+            {$translate.main.description}
           </p>
-          <div class="flex items-center justify-center gap-4 text-sm text-slate-500">
-            <div class="flex items-center gap-2">
-              <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span>{$translate.main.initialize}</span>
-            </div>
+          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/5 border border-white/5 text-[11px] text-zinc-400">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <span>{$translate.main.initialize}</span>
           </div>
         </div>
       </div>

@@ -1,9 +1,9 @@
 <script lang="ts">
-import { toasts, toastActions, translate } from "$lib/features";
+import { toasts, toastActions, translate } from "$lib";
 import { fly } from 'svelte/transition';
 
-let hoveredToastId= $state<string | null>(null);
-let pausedToasts = $state<Map<string, {pauseTime: number, remainingDuration: number}>>(new Map());
+let hoveredToastId: string | null = null;
+const pausedToasts = new Map<string, { pauseTime: number, remainingDuration: number }>();
 
 function getToastsStyles(toastType: string) {
     switch (toastType) {
@@ -35,101 +35,74 @@ function getIconPath(toastType: string) {
 }
 
 function pauseTimer(toastId: string) {
-    hoveredToastId = toastId;
-
-    if (!pausedToasts.has(toastId)) {
-        const toast = $toasts.find(t => t.id === toastId);
-        if (toast && toast.duration > 0) {
-            const remainingDuration = toast.duration; 
-            pausedToasts.set(toastId, { 
-                pauseTime: Date.now(), 
-                remainingDuration 
-            });
-            
-            toastActions.pause(toastId);
-        }
+  hoveredToastId = toastId;
+  if (!pausedToasts.has(toastId)) {
+    const toast = $toasts.find(t => t.id === toastId);
+    if (toast && toast.duration > 0) {
+      pausedToasts.set(toastId, { 
+        pauseTime: Date.now(), 
+        remainingDuration: toast.duration 
+      });
+      toastActions.pause(toastId);
     }
+  }
 }
 
 function resumeTimer(toastId: string) {
-    hoveredToastId = null;
-    
-    const pausedInfo = pausedToasts.get(toastId);
-    if (pausedInfo) {
-        toastActions.resume(toastId, pausedInfo.remainingDuration);
-        pausedToasts.delete(toastId);
-    }
+  hoveredToastId = null;
+  const pausedInfo = pausedToasts.get(toastId);
+  if (pausedInfo) {
+    toastActions.resume(toastId, pausedInfo.remainingDuration);
+    pausedToasts.delete(toastId);
+  }
 }
 </script>
 
-<div class="fixed bottom-4 right-4 z-50 space-y-3 max-w-sm">
-    {#each $toasts as toast (toast.id)}
-        <div 
-            class="toast-container border rounded-lg shadow-lg backdrop-blur-sm transition-all duration-300 {getToastsStyles(toast.type)}"
-            class:hovered={hoveredToastId === toast.id}
-            in:fly={{ x: 300, duration: 300 }}
-            out:fly={{ x: 300, duration: toast.isConfirm ? 0 : 300 }}
-            role="alert"
-            onmouseenter={() => pauseTimer(toast.id)}
-            onmouseleave={() => resumeTimer(toast.id)}
-        >
-            <div class="flex items-start gap-3 p-4">
-                <svg class="w-5 h-5 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={getIconPath(toast.type)}></path>
-                </svg>
-                
-                <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium break-words">{toast.message}</p>
-                </div>
-                
-                <button
-                    class="text-current opacity-70 hover:opacity-100 transition-opacity flex-shrink-0"
-                    aria-label="Close notification"
-                    onclick={() => toastActions.remove(toast.id)}
-                >
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-            
-            {#if toast.isConfirm}
-                <div class="flex justify-end gap-2 px-4 pb-4 border-t border-current/20 pt-3">
-                    <button
-                        class="px-3 py-1.5 text-xs font-medium bg-white/20 hover:bg-white/30 rounded transition-colors"
-                        onclick={toast.onConfirm}
-                    >
-                        {$translate.global.confirm}
-                    </button>
-                    <button
-                        class="px-3 py-1.5 text-xs font-medium bg-black/20 hover:bg-black/30 rounded transition-colors"
-                        onclick={toast.onCancel}
-                    >
-                        {$translate.global.cancel}
-                    </button>
-                </div>
-            {/if}
-            
-        {#if toast.duration && toast.duration > 0 && !toast.isConfirm}
-            <div class="h-1 bg-black/20 rounded-b-lg overflow-hidden">
-                <div 
-                    class="h-full bg-white/40 rounded-b-lg progress-bar"
-                    class:paused={hoveredToastId === toast.id}
-                    style="animation: shrink {toast.duration}ms linear forwards;"
-                ></div>
-            </div>
-        {/if}
+<div class="fixed bottom-4 right-4 z-50 space-y-2.5 max-w-sm w-full pointer-events-none">
+  {#each $toasts as toast (toast.id)}
+    <div 
+      class="pointer-events-auto border rounded-xl p-3.5 shadow-xl backdrop-blur-md {getToastsStyles(toast.type)}"
+      transition:fly={{ x: 200, duration: 250, opacity: 0 }}
+      role="alert"
+      onmouseenter={() => pauseTimer(toast.id)}
+      onmouseleave={() => resumeTimer(toast.id)}
+    >
+      <div class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={getIconPath(toast.type)}></path>
+        </svg>
+        
+        <div class="flex-1 min-w-0">
+          <p class="text-xs font-medium leading-relaxed break-words">{toast.message}</p>
         </div>
-    {/each}
+        
+        <button
+          class="text-current opacity-50 hover:opacity-100 p-0.5 rounded transition-opacity shrink-0"
+          aria-label="Close notification"
+          onclick={() => toastActions.remove(toast.id)}
+        >
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      
+      {#if toast.isConfirm}
+        <div class="flex justify-end gap-2 mt-3 pt-2.5 border-t border-white/5">
+          <button
+            class="px-2.5 py-1 text-xs text-zinc-400 hover:text-zinc-200 hover:bg-white/5 rounded-md transition-colors"
+            onclick={toast.onCancel}
+          >
+            {$translate.global.cancel}
+          </button>
+          <button
+            class="px-3 py-1 text-xs font-medium bg-rose-600 hover:bg-rose-500 text-white rounded-md transition-colors shadow-sm"
+            onclick={toast.onConfirm}
+          >
+            {$translate.global.confirm}
+          </button>
+        </div>
+      {/if}
+    </div>
+  {/each}
 </div>
-
-<style>
-.toast-container.hovered {
-    transform: scale(1.02);
-    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.3);
-}
-
-.progress-bar {
-    transform-origin: left;
-}
-</style>

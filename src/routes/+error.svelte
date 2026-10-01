@@ -1,6 +1,6 @@
 <script lang="ts">
 import { page } from '$app/state';
-import { translate } from '$lib/features';
+import { translate } from '$lib';
 
 const errorStatus = page.status || 500;
 const errorMessage = page.error?.message || $translate.error.unknown;

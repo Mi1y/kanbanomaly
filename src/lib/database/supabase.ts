@@ -1,14 +1,44 @@
-import { createClient } from '@supabase/supabase-js';
-import { env } from '$env/dynamic/public';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
-// production environment variables
-// import { env } from '$env/dynamic/private';
+const FALLBACK_URL = 'https://placeholder.supabase.co';
+const FALLBACK_KEY = 'placeholder-key';
 
-const supabaseUrl = env.PUBLIC_SUPABASE_URL;
-const supabaseKey = env.PUBLIC_SUPABASE_KEY;
+let cachedClient: SupabaseClient | null = null;
+let lastUsedUrl = '';
+let lastUsedKey = '';
 
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error("Supabase URL and Key must be set in environment variables");
+export function resetSupabaseClient() {
+  cachedClient = null;
+  lastUsedUrl = '';
+  lastUsedKey = '';
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export function getSupabaseClient(): SupabaseClient {
+  let targetUrl = FALLBACK_URL;
+  let targetKey = FALLBACK_KEY;
+
+  if (typeof localStorage !== 'undefined') {
+    const customUrl = localStorage.getItem('customSupabaseUrl');
+    const customKey = localStorage.getItem('customSupabaseAnonKey');
+    if (customUrl && customKey) {
+      targetUrl = customUrl;
+      targetKey = customKey;
+    }
+  }
+
+  if (!cachedClient || lastUsedUrl !== targetUrl || lastUsedKey !== targetKey) {
+    cachedClient = createClient(targetUrl, targetKey);
+    lastUsedUrl = targetUrl;
+    lastUsedKey = targetKey;
+  }
+
+  return cachedClient;
+}
+
+export const supabase: SupabaseClient<any, 'public', any> = new Proxy({} as SupabaseClient<any, 'public', any>, {
+  get(_target, prop) {
+    const client = getSupabaseClient() as any;
+    return client[prop];
+  }
+});
+

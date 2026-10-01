@@ -1,25 +1,25 @@
 import { writable, derived, get } from 'svelte/store';
-import { taskApi } from './api.js';
-import type { 
-  Task, 
-  TaskColumns, 
-  TaskView, 
+import { taskApi } from './api';
+import type {
+  Task,
+  TaskColumns,
+  TaskView,
   TaskStatus,
-  CreateTaskData, 
-  UpdateTaskData 
-} from './interfaces.js';
-import { getTranslation } from '../translator/store.js';
-import { toastActions } from '../toasts/store.js';
+  CreateTaskData,
+  UpdateTaskData
+} from './interfaces';
+import { getTranslation } from '$lib';
+import { toastActions } from '$lib';
 
 const _tasks = writable<Task[]>([]);
 const _loading = writable(false);
-const _currentProjectId = writable<number | null>(null);
+const _currentProjectId = writable<string | null>(null);
 
 export const tasksLoading = { subscribe: _loading.subscribe };
 
 export const taskColumns = derived(_tasks, (tasks): TaskColumns => {
   const columns: TaskColumns = { todo: [], doing: [], done: [] };
-  
+
   tasks.forEach(task => {
     const taskView: TaskView = {
       id: task.id,
@@ -29,13 +29,13 @@ export const taskColumns = derived(_tasks, (tasks): TaskColumns => {
     };
     columns[task.status].push(taskView);
   });
-  
+
   return columns;
 });
 
 // ACTIONS
 export const taskActions = {
-  async loadForProject(projectId: number | null) {
+  async loadForProject(projectId: string | null) {
     if (!projectId) {
       _tasks.set([]);
       _currentProjectId.set(null);
@@ -54,7 +54,7 @@ export const taskActions = {
     }
   },
 
-async create(data: CreateTaskData) {
+  async create(data: CreateTaskData) {
     _loading.set(true);
     try {
       const newTask = await taskApi.create(data);
@@ -71,17 +71,16 @@ async create(data: CreateTaskData) {
     }
   },
 
-  async update(taskId: number, updates: UpdateTaskData) {
+  async update(taskId: string, updates: UpdateTaskData) {
     _loading.set(true);
-    // get project id from _tasks
     const task = get(_tasks).find(t => t.id === taskId);
     const projectId = task?.project_id;
 
     try {
       await taskApi.update(taskId, updates);
-      await taskApi.updatedAt(projectId || 0);
-      _tasks.update(tasks => 
-        tasks.map(task => 
+      if (projectId) await taskApi.updatedAt(projectId);
+      _tasks.update(tasks =>
+        tasks.map(task =>
           task.id === taskId ? { ...task, ...updates } : task
         )
       );
@@ -93,15 +92,14 @@ async create(data: CreateTaskData) {
     }
   },
 
-  async delete(taskId: number) {
+  async delete(taskId: string) {
     _loading.set(true);
-    // get project id from _tasks
     const task = get(_tasks).find(t => t.id === taskId);
     const projectId = task?.project_id;
     try {
       await taskApi.delete(taskId);
-      await taskApi.updatedAt(projectId || 0);
-      _tasks.update(tasks => 
+      if (projectId) await taskApi.updatedAt(projectId);
+      _tasks.update(tasks =>
         tasks.filter(task => task.id !== taskId)
       );
     } catch {
@@ -112,22 +110,21 @@ async create(data: CreateTaskData) {
     }
   },
 
-  async move(taskId: number, fromStatus: TaskStatus, toStatus: TaskStatus) {
+  async move(taskId: string, fromStatus: TaskStatus, toStatus: TaskStatus) {
     if (fromStatus === toStatus) return;
-    // get project id from _tasks
     const task = get(_tasks).find(t => t.id === taskId);
     const projectId = task?.project_id;
     try {
-      _tasks.update(tasks => 
-        tasks.map(task => 
-          task.id === taskId ? { ...task, status: toStatus } : task 
+      _tasks.update(tasks =>
+        tasks.map(task =>
+          task.id === taskId ? { ...task, status: toStatus } : task
         )
       );
-      await taskApi.update(taskId, { status: toStatus});
-      await taskApi.updatedAt(projectId || 0);
+      await taskApi.update(taskId, { status: toStatus });
+      if (projectId) await taskApi.updatedAt(projectId);
     } catch {
       toastActions.warning(getTranslation("toasts.error.taskMoveFailed"));
-      _tasks.update(tasks => tasks.map(task => task.id === taskId ? { ...task, status: fromStatus} : task ));
+      _tasks.update(tasks => tasks.map(task => task.id === taskId ? { ...task, status: fromStatus } : task));
     }
   },
 };

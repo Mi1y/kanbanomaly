@@ -2,18 +2,18 @@ export type TaskStatus = 'todo' | 'doing' | 'done';
 export type TaskLevel = 'low' | 'medium' | 'high' | 'critical';
 
 export interface Task {
-  id: number;
+  id: string;
   title: string;
   status: TaskStatus;
   level: TaskLevel;
-  project_id: number;
+  project_id: string;
 }
 
 export interface CreateTaskData {
   title: string;
   status: TaskStatus;
   level: TaskLevel;
-  project_id: number;
+  project_id: string;
 }
 
 export interface UpdateTaskData {
@@ -23,7 +23,7 @@ export interface UpdateTaskData {
 }
 
 export interface TaskView {
-  id: number;
+  id: string;
   title: string;
   status: TaskStatus;
   level: TaskLevel;
