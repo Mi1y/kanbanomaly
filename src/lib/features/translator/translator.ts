@@ -19,6 +19,7 @@ export const translations = {
             settings: 'Settings',
             language: 'Language',
             storageMode: 'Storage Mode',
+            zoomHint: 'Zoom:',
             backupAndData: 'Backup & Data',
             exportAll: 'Export All Projects',
             importJson: 'Import from JSON',
@@ -46,7 +47,6 @@ export const translations = {
             status: 'Project Status',
             enter_project_name: 'Enter project name',
             noProjects: 'No projects detected',
-            
             statusLabels: {
                 active: 'Active',
                 inactive: 'Inactive',
@@ -67,7 +67,6 @@ export const translations = {
             deployNew: 'Deploy New Task',
             enterName: 'Enter task name',
             loading: 'Loading Tasks...',
-            
             columns: {
                 todo: 'TODO',
                 doing: 'IN PROGRESS',
@@ -157,7 +156,6 @@ export const translations = {
             },
         }
     },
-    
     pl: {
         // global
         global: {
@@ -178,6 +176,7 @@ export const translations = {
             settings: 'Ustawienia',
             language: 'Język',
             storageMode: 'Tryb zapisu danych',
+            zoomHint: 'Zoom:',
             backupAndData: 'Kopia zapasowa i dane',
             exportAll: 'Eksportuj wszystkie projekty',
             importJson: 'Importuj z pliku JSON',
@@ -205,7 +204,6 @@ export const translations = {
             status: 'Status projektu',
             enter_project_name: 'Wprowadź nazwę projektu',
             noProjects: 'Nie wykryto projektów',
-            
             statusLabels: {
                 active: 'Aktywny',
                 inactive: 'Nieaktywny',
@@ -226,7 +224,6 @@ export const translations = {
             deployNew: 'Wdróż nowe zadanie',
             enterName: 'Wprowadź nazwę zadania',
             loading: 'Ładowanie zadań...',
-            
             columns: {
                 todo: 'DO ZROBIENIA',
                 doing: 'W TRAKCIE',
@@ -337,6 +334,7 @@ export const translations = {
             settings: 'Einstellungen',
             language: 'Sprache',
             storageMode: 'Speichermodus',
+            zoomHint: 'Zoom:',
             backupAndData: 'Sicherung & Daten',
             exportAll: 'Alle Projekte exportieren',
             importJson: 'Aus JSON importieren',
@@ -364,7 +362,6 @@ export const translations = {
             status: 'Projektstatus',
             enter_project_name: 'Projektname eingeben',
             noProjects: 'Keine Projekte erkannt',
-            
             statusLabels: {
                 active: 'Aktiv',
                 inactive: 'Inaktiv',
@@ -385,7 +382,6 @@ export const translations = {
             deployNew: 'Neue Aufgabe bereitstellen',
             enterName: 'Aufgabenname eingeben',
             loading: 'Lade Aufgaben...',
-            
             columns: {
                 todo: 'ZU ERLEDIGEN',
                 doing: 'IN BEARBEITUNG',

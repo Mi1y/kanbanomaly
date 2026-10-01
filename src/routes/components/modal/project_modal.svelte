@@ -1,5 +1,6 @@
 <script lang="ts">
 import { translate, toastActions } from '$lib';
+import KeyboardShortcut from '../keyboard_shortcut.svelte';
 import type { 
   UnifiedCreateProjectData as CreateProjectData, 
   UnifiedUpdateProjectData as UpdateProjectData, 
@@ -77,6 +78,7 @@ function closeModal() {
 </script>
 
 {#if isOpen}
+  <KeyboardShortcut onEscape={closeModal} />
   <div class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-all">
     <div class="bg-[#0f111a] rounded-xl p-6 w-full max-w-md border border-white/10 shadow-2xl shadow-black/50 relative overflow-hidden">
       <div class="flex items-center justify-between mb-5 pb-3 border-b border-white/5">

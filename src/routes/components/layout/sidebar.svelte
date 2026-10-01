@@ -123,7 +123,7 @@
   });
 </script>
 
-<aside class="{showSidebar ? 'w-64' : 'w-14'} h-full bg-[#0d0f17] border-r border-white/5 flex flex-col relative transition-all duration-200 select-none z-20">
+<aside class="{showSidebar ? 'w-72' : 'w-16'} h-full bg-[#0d0f17] border-r border-white/5 flex flex-col relative transition-all duration-200 select-none z-20">
   <div class="h-14 px-3 flex items-center justify-between border-b border-white/5">
     {#if showSidebar}
       <div class="flex items-center gap-2.5 overflow-hidden pl-1">

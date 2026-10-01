@@ -12,6 +12,7 @@ import {
   exportImportService,
   resetSupabaseClient,
 } from '$lib';
+import KeyboardShortcut from '../keyboard_shortcut.svelte';
 import type { DataSource } from '$lib';
 
 let { isOpen = $bindable(), onClose } = $props<{
@@ -95,8 +96,9 @@ function closeModal() {
 </script>
 
 {#if isOpen}
+  <KeyboardShortcut onEscape={closeModal} />
   <div class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-all">
-    <div class="bg-[#0f111a] rounded-xl p-6 w-full max-w-md border border-white/10 shadow-2xl shadow-black/50 relative overflow-hidden">
+    <div class="bg-[#0f111a] rounded-xl p-6 w-full max-w-lg border border-white/10 shadow-2xl shadow-black/50 relative overflow-hidden">
       <div class="flex items-center justify-between mb-5 pb-3 border-b border-white/5">
         <div class="flex items-center gap-2.5">
           <div class="w-7 h-7 rounded-md bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
@@ -131,9 +133,9 @@ function closeModal() {
         </div>
 
         <div>
-          <label for="storage-mode" class="block text-xs font-medium text-zinc-400 mb-1.5">
+          <span class="block text-xs font-medium text-zinc-400 mb-1.5">
             {$translate.ui.storageMode || 'Storage Mode'}
-          </label>
+          </span>
           <div class="grid grid-cols-2 gap-2">
             <button
               type="button"
@@ -221,19 +223,30 @@ function closeModal() {
           />
         </div>
 
-        <div class="flex justify-end gap-2 pt-4 border-t border-white/5">
-          <button
-            onclick={closeModal}
-            class="px-3.5 py-1.5 text-xs text-zinc-400 hover:text-zinc-200 hover:bg-white/5 rounded-lg transition-colors"
-          >
-            {$translate.global.cancel}
-          </button>
-          <button
-            onclick={saveSettings}
-            class="px-4 py-1.5 text-xs font-medium bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg transition-colors shadow-sm"
-          >
-            {$translate.global.save}
-          </button>
+        <div class="flex items-center justify-between gap-4 pt-4 border-t border-white/5">
+          <div class="flex items-center gap-1.5 text-xs text-zinc-500 whitespace-nowrap">
+            <span>{$translate.ui.zoomHint || 'Zoom:'}</span>
+            <kbd class="px-1.5 py-0.5 rounded bg-white/[0.05] border border-white/10 text-zinc-300 font-mono text-[11px] shadow-sm">Ctrl +</kbd>
+            <span class="text-zinc-600">/</span>
+            <kbd class="px-1.5 py-0.5 rounded bg-white/[0.05] border border-white/10 text-zinc-300 font-mono text-[11px] shadow-sm">Ctrl -</kbd>
+            <span class="text-zinc-600">/</span>
+            <kbd class="px-1.5 py-0.5 rounded bg-white/[0.05] border border-white/10 text-zinc-300 font-mono text-[11px] shadow-sm">Ctrl 0</kbd>
+          </div>
+
+          <div class="flex items-center gap-2 shrink-0">
+            <button
+              onclick={closeModal}
+              class="px-3.5 py-1.5 text-xs text-zinc-400 hover:text-zinc-200 hover:bg-white/5 rounded-lg transition-colors"
+            >
+              {$translate.global.cancel}
+            </button>
+            <button
+              onclick={saveSettings}
+              class="px-4 py-1.5 text-xs font-medium bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg transition-colors shadow-sm"
+            >
+              {$translate.global.save}
+            </button>
+          </div>
         </div>
       </div>
     </div>
