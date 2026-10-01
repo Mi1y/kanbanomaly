@@ -172,8 +172,8 @@ $effect(() => {
 
   <!-- Quick Deploy Task Bar -->
   <div class="rounded-xl border border-white/5 bg-[#0d0f17] p-3 mb-6 shadow-sm">
-    <form onsubmit={(e) => { e.preventDefault(); addNewTask(); }} class="flex items-center gap-2 flex-wrap">
-      <div class="relative flex-1 min-w-48">
+    <form onsubmit={(e) => { e.preventDefault(); addNewTask(); }} class="flex items-center gap-2.5 flex-wrap sm:flex-nowrap">
+      <div class="relative flex-1 min-w-[200px]">
         <input
           bind:value={newTaskTitle}
           placeholder={$translate.tasks.enterName}
@@ -183,7 +183,7 @@ $effect(() => {
 
       <select 
         bind:value={newTaskStatus} 
-        class="text-xs bg-white/[0.03] border border-white/10 rounded-lg px-2.5 py-2 text-zinc-300 focus:outline-none focus:border-indigo-500/50"
+        class="text-xs bg-white/[0.03] border border-white/10 rounded-lg pl-3 pr-8 py-2 text-zinc-300 focus:outline-none focus:border-indigo-500/50 cursor-pointer hover:bg-white/[0.05] transition-colors shrink-0"
       >
         <option value="todo" class="bg-[#12141c]">{$translate.tasks.columns.todo}</option>
         <option value="doing" class="bg-[#12141c]">{$translate.tasks.columns.doing}</option>
@@ -192,7 +192,7 @@ $effect(() => {
 
       <select 
         bind:value={newTaskLevel} 
-        class="text-xs bg-white/[0.03] border border-white/10 rounded-lg px-2.5 py-2 text-zinc-300 focus:outline-none focus:border-indigo-500/50"
+        class="text-xs bg-white/[0.03] border border-white/10 rounded-lg pl-3 pr-8 py-2 text-zinc-300 focus:outline-none focus:border-indigo-500/50 cursor-pointer hover:bg-white/[0.05] transition-colors shrink-0"
       >
         <option value="low" class="bg-[#12141c]">{$translate.tasks.levels.low}</option>
         <option value="medium" class="bg-[#12141c]">{$translate.tasks.levels.medium}</option>
@@ -202,7 +202,7 @@ $effect(() => {
 
       <button
         type="submit"
-        class="text-xs font-medium bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-2 rounded-lg transition-colors shadow-sm"
+        class="text-xs font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors shadow-sm shrink-0 whitespace-nowrap"
       >
         {$translate.tasks.deploy}
       </button>
