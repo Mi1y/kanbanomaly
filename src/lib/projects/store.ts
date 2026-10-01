@@ -1,17 +1,17 @@
 import { writable, derived } from 'svelte/store';
-// DEMO
-import { projectApi } from '../../database/supabase';
+import { projectApi } from '../database/supabase';
 import type { 
   Project, 
   ProjectView, 
   ProjectSummary,
   CreateProjectData, 
-  UpdateProjectData 
-} from './interfaces.js';
-import { toastActions } from '../toasts/store.js';
+  UpdateProjectData, 
+} from './interfaces';
+import { getTranslation } from '$lib';
+import { toastActions } from '$lib';
 
 const _projects = writable<Project[]>([]);
-const _selectedProjectId = writable<number | null>(null);
+const _selectedProjectId = writable<string | null>(null);
 const _selectedProject = writable<Project | null>(null);
 const _loading = writable(false);
 
@@ -33,11 +33,9 @@ export const selectedProject = derived(_selectedProject, (project): ProjectView 
 
 export const selectedProjectId = { subscribe: _selectedProjectId.subscribe };
 
-
-// ACTIONS
 export const projectActions = {
 
-  async getById(projectId: number): Promise<ProjectView | null> {
+  async getById(projectId: string): Promise<ProjectView | null> {
     try {
       const project = await projectApi.getById(projectId);
       return project ? {
@@ -48,7 +46,7 @@ export const projectActions = {
         end_date: project.end_date
       } : null;
     } catch {
-      toastActions.warning("Failed to load project details");
+      toastActions.warning(getTranslation('toasts.error.projectLoadDetailsFailed'));
       return null;
     }
   },
@@ -59,14 +57,14 @@ export const projectActions = {
       const projects = await projectApi.getAll();
       _projects.set(projects);
     } catch {
-      toastActions.error("Failed to load projects");
+      toastActions.error(getTranslation('toasts.error.projectsLoadFailed'));
       _projects.set([]);
     } finally {
       _loading.set(false);
     }
   },
 
-  async select(projectId: number | null) {
+  async select(projectId: string | null) {
     _selectedProjectId.set(projectId);
     
     if (!projectId) {
@@ -78,7 +76,7 @@ export const projectActions = {
       const project = await projectApi.getById(projectId);
       _selectedProject.set(project);
     } catch {
-      toastActions.warning("Failed to load project details");
+      toastActions.warning(getTranslation('toasts.error.projectLoadDetailsFailed'));
       _selectedProject.set(null);
     }
   },
@@ -92,26 +90,26 @@ export const projectActions = {
         );
       return newProject;
     } catch {
-      toastActions.warning("Failed to create project");
+      toastActions.warning(getTranslation('toasts.error.projectCreateFailed'));
       return null;
     } finally {
       _loading.set(false);
     }
   },
 
-  async update(projectId: number, updates: UpdateProjectData) {
+  async update(projectId: string, updates: UpdateProjectData) {
     _loading.set(true);
     try {
       await projectApi.update(projectId, updates);
     } catch {
-      toastActions.warning("Failed to update project");
+      toastActions.warning(getTranslation('toasts.error.projectUpdateFailed'));
       return null;
     } finally {
       _loading.set(false);
     }
   },
 
-  async delete(projectId: number) {
+  async delete(projectId: string) {
     _loading.set(true);
     try {
       await projectApi.delete(projectId);
@@ -125,7 +123,7 @@ export const projectActions = {
         current?.id === projectId ? null : current
       );
     } catch {
-      toastActions.error("Failed to delete project");
+      toastActions.error(getTranslation('toasts.error.projectDeleteFailed'));
       return null;
     } finally {
       _loading.set(false);
