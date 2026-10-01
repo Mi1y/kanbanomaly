@@ -1,8 +1,7 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import { env } from '$env/dynamic/public';
 
-const defaultUrl = env.PUBLIC_SUPABASE_URL || 'placeholder-url';
-const defaultKey = env.PUBLIC_SUPABASE_KEY || 'placeholder-key';
+const FALLBACK_URL = 'https://placeholder.supabase.co';
+const FALLBACK_KEY = 'placeholder-key';
 
 let cachedClient: SupabaseClient | null = null;
 let lastUsedUrl = '';
@@ -15,8 +14,8 @@ export function resetSupabaseClient() {
 }
 
 export function getSupabaseClient(): SupabaseClient {
-  let targetUrl = defaultUrl;
-  let targetKey = defaultKey;
+  let targetUrl = FALLBACK_URL;
+  let targetKey = FALLBACK_KEY;
 
   if (typeof localStorage !== 'undefined') {
     const customUrl = localStorage.getItem('customSupabaseUrl');
