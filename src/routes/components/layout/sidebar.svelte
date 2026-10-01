@@ -127,10 +127,8 @@
   <div class="h-14 px-3 flex items-center justify-between border-b border-white/5">
     {#if showSidebar}
       <div class="flex items-center gap-2.5 overflow-hidden pl-1">
-        <div class="w-6 h-6 rounded bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0">
-          <svg class="w-3.5 h-3.5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
-          </svg>
+        <div class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0">
+          <img src="/favicon.svg" alt="Kanbanomaly" class="w-7 h-7 object-contain" />
         </div>
         <span class="font-semibold text-sm tracking-tight text-zinc-100 truncate">Kanbanomaly</span>
       </div>

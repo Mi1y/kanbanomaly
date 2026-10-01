@@ -10,10 +10,8 @@
     {:else}
       <div class="flex-1 flex items-center justify-center">
         <div class="max-w-md w-full p-8 rounded-xl border border-white/5 bg-[#0d0f17] text-center shadow-xl shadow-black/20">
-          <div class="w-12 h-12 mx-auto mb-4 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
-            </svg>
+          <div class="w-14 h-14 mx-auto mb-4 rounded-xl flex items-center justify-center">
+            <img src="/favicon.svg" alt="Kanbanomaly" class="w-14 h-14 object-contain" />
           </div>
           <h2 class="text-base font-semibold text-zinc-100 mb-1.5 tracking-tight">
             {$translate.main.welcome}
