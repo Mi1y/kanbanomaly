@@ -2,8 +2,8 @@
 import { toasts, toastActions, translate } from "$lib";
 import { fly } from 'svelte/transition';
 
-let hoveredToastId = $state<string | null>(null);
-let pausedToasts = $state<Map<string, { pauseTime: number, remainingDuration: number }>>(new Map());
+let hoveredToastId: string | null = null;
+const pausedToasts = new Map<string, { pauseTime: number, remainingDuration: number }>();
 
 function getToastsStyles(toastType: string) {
     switch (toastType) {
@@ -61,9 +61,8 @@ function resumeTimer(toastId: string) {
 <div class="fixed bottom-4 right-4 z-50 space-y-2.5 max-w-sm w-full pointer-events-none">
   {#each $toasts as toast (toast.id)}
     <div 
-      class="pointer-events-auto border rounded-xl p-3.5 shadow-xl backdrop-blur-md transition-all duration-200 {getToastsStyles(toast.type)}"
-      in:fly={{ x: 200, duration: 250 }}
-      out:fly={{ x: 200, duration: toast.isConfirm ? 0 : 250 }}
+      class="pointer-events-auto border rounded-xl p-3.5 shadow-xl backdrop-blur-md {getToastsStyles(toast.type)}"
+      transition:fly={{ x: 200, duration: 250, opacity: 0 }}
       role="alert"
       onmouseenter={() => pauseTimer(toast.id)}
       onmouseleave={() => resumeTimer(toast.id)}
