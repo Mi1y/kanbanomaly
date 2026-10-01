@@ -1,29 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="/kanbanomaly/favicon.ico" />
-    <link rel="icon" type="image/png" href="/kanbanomaly/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="/kanbanomaly/favicon.svg" />
-    <link rel="shortcut icon" href="/kanbanomaly/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/kanbanomaly/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="Kanbanomaly" />
-    <link rel="manifest" href="/kanbanomaly/site.webmanifest" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    
-		<link rel="modulepreload" href="/kanbanomaly/_app/immutable/entry/start.Db-NZ5ik.js">
-		<link rel="modulepreload" href="/kanbanomaly/_app/immutable/chunks/CaLmedd7.js">
-		<link rel="modulepreload" href="/kanbanomaly/_app/immutable/chunks/Dhtpitqt.js">
-		<link rel="modulepreload" href="/kanbanomaly/_app/immutable/chunks/Drywk7Hn.js">
-		<link rel="modulepreload" href="/kanbanomaly/_app/immutable/entry/app.Bq6JAHq3.js">
-		<link rel="modulepreload" href="/kanbanomaly/_app/immutable/chunks/Bk8IDjVl.js">
-		<link rel="modulepreload" href="/kanbanomaly/_app/immutable/chunks/WcQBXPXw.js">
-  </head>
-  <body data-sveltekit-preload-data="hover">
-    <div style="display: contents">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="/kanbanomaly/favicon.ico" />
+  <link rel="icon" type="image/png" href="/kanbanomaly/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/kanbanomaly/favicon.svg" />
+  <link rel="shortcut icon" href="/kanbanomaly/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/kanbanomaly/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="Kanbanomaly" />
+  <link rel="manifest" href="/kanbanomaly/site.webmanifest" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    try {
+      const savedSize = localStorage.getItem('userFontSize');
+      if (savedSize) {
+        const parsed = parseInt(savedSize, 10);
+        if (parsed && parsed >= 12 && parsed <= 24) {
+          document.documentElement.style.fontSize = parsed + 'px';
+        }
+      } else {
+        document.documentElement.style.fontSize = '18px';
+      }
+    } catch (_) { }
+  </script>
+
+  <link href="/kanbanomaly/_app/immutable/entry/start.C0_R3_1R.js" rel="modulepreload">
+		<link href="/kanbanomaly/_app/immutable/chunks/MTersYIw.js" rel="modulepreload">
+		<link href="/kanbanomaly/_app/immutable/chunks/NAk9l85_.js" rel="modulepreload">
+		<link href="/kanbanomaly/_app/immutable/entry/app.575rnB9x.js" rel="modulepreload">
+		<link href="/kanbanomaly/_app/immutable/chunks/B9BZY_VP.js" rel="modulepreload">
+		<link href="/kanbanomaly/_app/immutable/chunks/Dx8E_qZ2.js" rel="modulepreload">
+		<link href="/kanbanomaly/_app/immutable/chunks/C5kvPh55.js" rel="modulepreload">
+		<link href="/kanbanomaly/_app/immutable/nodes/0.uHYSxN26.js" rel="modulepreload">
+		<link href="/kanbanomaly/_app/immutable/chunks/DXGskB7J.js" rel="modulepreload">
+		
+		<link href="/kanbanomaly/_app/immutable/assets/0.Cy7KRcRP.css" rel="stylesheet">
+</head>
+
+<body data-sveltekit-preload-data="hover">
+  <div style="display: contents">
 			<script>
 				{
-					__sveltekit_cibfm9 = {
+					__sveltekit_kmjkad = {
 						base: "/kanbanomaly",
 						assets: "/kanbanomaly"
 					};
@@ -31,13 +53,14 @@
 					const element = document.currentScript.parentElement;
 
 					Promise.all([
-						import("/kanbanomaly/_app/immutable/entry/start.Db-NZ5ik.js"),
-						import("/kanbanomaly/_app/immutable/entry/app.Bq6JAHq3.js")
+						import("/kanbanomaly/_app/immutable/entry/start.C0_R3_1R.js"),
+						import("/kanbanomaly/_app/immutable/entry/app.575rnB9x.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element);
 					});
 				}
 			</script>
 		</div>
-  </body>
+</body>
+
 </html>
