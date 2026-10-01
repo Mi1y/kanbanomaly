@@ -9,6 +9,8 @@ import {
   customSupabaseAnonKey,
   projectActions,
   taskActions,
+  exportImportService,
+  resetSupabaseClient,
 } from '$lib';
 import type { DataSource } from '$lib';
 
@@ -21,16 +23,55 @@ let selectedLanguage = $state($currentLanguage);
 let selectedDataSource = $state<DataSource>($dataSource);
 let supabaseUrlVal = $state($customSupabaseUrl);
 let supabaseKeyVal = $state($customSupabaseAnonKey);
+let backupFileInput: HTMLInputElement | undefined = $state();
+
+async function handleExportAll() {
+  try {
+    const count = await exportImportService.exportAllProjects();
+    toastActions.success(`${$translate.toasts.other.backupSuccess}: ${count}`);
+  } catch {
+    toastActions.error($translate.toasts.error.unexpected);
+  }
+}
+
+async function handleBackupFileSelected(event: Event) {
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
+  if (!file) return;
+
+  try {
+    const text = await file.text();
+    const count = await exportImportService.importFromJson(text);
+    toastActions.success(`${$translate.toasts.other.importSuccess}: ${count}`);
+  } catch {
+    toastActions.error($translate.toasts.other.importFailed);
+  } finally {
+    input.value = '';
+  }
+}
 
 async function saveSettings() {
   setLanguage(selectedLanguage);
 
-  const sourceChanged = selectedDataSource !== $dataSource;
-  dataSource.set(selectedDataSource);
-  customSupabaseUrl.set(supabaseUrlVal.trim());
-  customSupabaseAnonKey.set(supabaseKeyVal.trim());
+  const prevSource = $dataSource;
+  const prevUrl = $customSupabaseUrl;
+  const prevKey = $customSupabaseAnonKey;
 
-  if (sourceChanged) {
+  const nextUrl = supabaseUrlVal.trim();
+  const nextKey = supabaseKeyVal.trim();
+
+  const sourceChanged = selectedDataSource !== prevSource;
+  const credentialsChanged = nextUrl !== prevUrl || nextKey !== prevKey;
+
+  dataSource.set(selectedDataSource);
+  customSupabaseUrl.set(nextUrl);
+  customSupabaseAnonKey.set(nextKey);
+
+  if (credentialsChanged) {
+    resetSupabaseClient();
+  }
+
+  if (sourceChanged || credentialsChanged) {
     projectActions.select(null);
     taskActions.loadForProject(null);
     await projectActions.loadAll();
@@ -139,6 +180,46 @@ function closeModal() {
             </div>
           </div>
         {/if}
+
+        <div class="space-y-3 pt-3 border-t border-white/5">
+          <span class="block text-xs font-medium text-zinc-400 mb-1">
+            {$translate.ui.backupAndData || 'Backup & Data'}
+          </span>
+          <p class="text-[11px] text-zinc-500">
+            {$translate.ui.backupDescription || 'Export your boards as JSON or restore projects from a backup file.'}
+          </p>
+
+          <div class="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onclick={handleExportAll}
+              class="flex items-center justify-center gap-1.5 px-3 py-2 bg-white/[0.02] hover:bg-white/[0.05] border border-white/10 rounded-lg text-xs font-medium text-zinc-300 transition-colors"
+            >
+              <svg class="w-3.5 h-3.5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+              </svg>
+              <span>{$translate.ui.exportAll || 'Export All'}</span>
+            </button>
+
+            <button
+              type="button"
+              onclick={() => backupFileInput?.click()}
+              class="flex items-center justify-center gap-1.5 px-3 py-2 bg-white/[0.02] hover:bg-white/[0.05] border border-white/10 rounded-lg text-xs font-medium text-zinc-300 transition-colors"
+            >
+              <svg class="w-3.5 h-3.5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+              </svg>
+              <span>{$translate.ui.importJson || 'Import JSON'}</span>
+            </button>
+          </div>
+          <input
+            type="file"
+            accept=".json"
+            class="hidden"
+            bind:this={backupFileInput}
+            onchange={handleBackupFileSelected}
+          />
+        </div>
 
         <div class="flex justify-end gap-2 pt-4 border-t border-white/5">
           <button

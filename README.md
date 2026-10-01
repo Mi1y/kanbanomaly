@@ -8,28 +8,16 @@ Easily move tasks between columns, set due dates, and keep your workflow smooth 
 
 ## 🚀 Features
 
-    📌 Organize tasks using Kanban-style columns
+- 📌 **Hybrid Storage:** Works completely offline out-of-the-box (local JSON files) or connects to your Supabase project.
+- ⏰ **Deadline & Progress Tracking:** Visual deadline bars and task status overviews.
+- 🎯 **Kanban Board:** Smooth drag-and-drop between Todo, Doing, and Done columns.
+- 💾 **Backup & Migration:** Export/import individual boards or full workspace backups to/from JSON.
+- 🌐 **Multi-language:** English, Polish, German.
+- 🖥️ **Desktop App:** Built with Tauri v2 and Svelte 5.
 
-    ⏰ Add and manage deadlines for each task
-
-    ⚡ Fast updates and quick data loading with Supabase
-
-    🧡 Built with Svelte
-
-## 🗄️ Powered by Supabase
-
-This app uses Supabase to handle:
-
-    🔐 Authentication (optional)
-
-    🧮 PostgreSQL database
-
-    🔌 API integration
-
+---
 
 ## 🛠️ Getting Started
-
-To run Kanbanomaly locally, follow these steps:
 
 ### 1. Clone the repository
 ```bash
@@ -39,21 +27,42 @@ cd Kanbanomaly
 
 ### 2. Install dependencies
 ```bash
-npm install
+pnpm install
 ```
 
-### 3. Configure environment variables
-Create a `.env` file in the root folder and add your Supabase credentials:
-```env
-VITE_SUPABASE_URL=your-supabase-url
-VITE_SUPABASE_ANON_KEY=your-anon-key
+### 3. Run the application
+
+To run the desktop application in development mode:
+```bash
+pnpm run tauri dev
 ```
 
-### 4. Set up the database
-1. Go to your [Supabase dashboard](https://app.supabase.com/).
-2. Create a new **Organization** (if you don't have one).
-3. Create a new **Project** within your organization.
-4. Open the **SQL Editor** in your project and run the following SQL to create the required tables:
+Or run the web dev server:
+```bash
+pnpm run dev
+```
+
+---
+
+## ⚙️ Storage & Database Configuration
+
+Kanbanomaly supports two storage modes without editing any configuration or `.env` files:
+
+### Mode A: Local Files (Default - Zero Setup)
+By default, Kanbanomaly stores all your projects and tasks locally on your computer in `$APPDATA/kanban_data` as JSON files. No database setup or internet connection is required.
+
+### Mode B: Cloud (Supabase)
+To synchronize your boards with Supabase:
+1. Open the application and click **Settings** at the bottom of the sidebar.
+2. Under **Storage Mode**, select **Cloud (Supabase)**.
+3. Enter your:
+   - **Project URL** (found in Supabase Dashboard -> Project Settings -> API)
+   - **Publishable / Anon Key**
+4. Click **Save**. The app will immediately connect and load your boards.
+
+#### Database Tables Setup (for Supabase)
+In your Supabase project, go to the **SQL Editor** and run the following script:
+
 ```sql
 create table public.projects (
   id uuid default gen_random_uuid() primary key,
@@ -73,19 +82,15 @@ create table public.tasks (
 );
 ```
 
-### 5. Start the development server
-```bash
-npm run dev
-```
-Open your browser and go to [http://localhost:5173](http://localhost:5173)
+---
 
 ## 📦 Built With
 
-    🧡 Svelte
-
-    ⚡ Vite
-
-    🗃️ Supabase
+- 🧡 **Svelte 5**
+- 🦀 **Tauri v2**
+- ⚡ **Vite**
+- 🗃️ **Supabase** (optional)
+- 🎨 **Tailwind CSS**
   
 ## 🤝 Contributing
 

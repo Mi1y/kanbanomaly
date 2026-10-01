@@ -25,4 +25,6 @@ export {
   type DataSource
 } from './features/settings/store';
 
+export { resetSupabaseClient } from './database/supabase';
+
 export * from './share';

@@ -17,12 +17,19 @@ export const translations = {
         // user interface
         ui: {
             settings: 'Settings',
-            language: 'Language'
+            language: 'Language',
+            storageMode: 'Storage Mode',
+            backupAndData: 'Backup & Data',
+            exportAll: 'Export All Projects',
+            importJson: 'Import from JSON',
+            backupDescription: 'Export your boards as JSON or restore projects from a backup file.'
         },
         // sidebar
         sidebar: {
             createProject: 'Create New Project',
             projectsList: 'Projects',
+            importProject: 'Import JSON',
+            exportProject: 'Export Project',
             noProjects: 'No projects detected',
             openSettings: 'Open settings',
             collapse: 'Collapse sidebar',
@@ -129,7 +136,11 @@ export const translations = {
                 projectSuffixUpdate: 'updated successfully',
                 projectSuffixSuccess: 'created successfully',
                 taskPrefix: 'Task',
-                taskSuffixSuccess: 'added successfully'
+                taskSuffixSuccess: 'added successfully',
+                exportSuccess: 'Project exported successfully',
+                backupSuccess: 'All projects exported successfully',
+                importSuccess: 'Successfully imported project(s)',
+                importFailed: 'Failed to import projects from JSON'
             }
         },
         // error
@@ -165,12 +176,19 @@ export const translations = {
         // user interface
         ui: {
             settings: 'Ustawienia',
-            language: 'Język'
+            language: 'Język',
+            storageMode: 'Tryb zapisu danych',
+            backupAndData: 'Kopia zapasowa i dane',
+            exportAll: 'Eksportuj wszystkie projekty',
+            importJson: 'Importuj z pliku JSON',
+            backupDescription: 'Eksportuj tablice do pliku JSON lub przywróć projekty z kopii zapasowej.'
         },
         // sidebar
         sidebar: {
             createProject: 'Utwórz nowy projekt',
             projectsList: 'Projekty',
+            importProject: 'Importuj JSON',
+            exportProject: 'Eksportuj projekt',
             noProjects: 'Nie wykryto projektów',
             openSettings: 'Otwórz ustawienia',
             collapse: 'Zwiń pasek boczny',
@@ -277,7 +295,11 @@ export const translations = {
                 projectSuffixUpdate: 'zaktualizowano pomyślnie',
                 projectSuffixSuccess: 'utworzono pomyślnie',
                 taskPrefix: 'Zadanie',
-                taskSuffixSuccess: 'dodano pomyślnie'
+                taskSuffixSuccess: 'dodano pomyślnie',
+                exportSuccess: 'Projekt wyeksportowany pomyślnie',
+                backupSuccess: 'Wszystkie projekty wyeksportowane pomyślnie',
+                importSuccess: 'Pomyślnie zaimportowano projekty',
+                importFailed: 'Błąd podczas importu projektów z pliku JSON'
             }
         },
         // error
@@ -313,12 +335,19 @@ export const translations = {
         // user interface
         ui: {
             settings: 'Einstellungen',
-            language: 'Sprache'
+            language: 'Sprache',
+            storageMode: 'Speichermodus',
+            backupAndData: 'Sicherung & Daten',
+            exportAll: 'Alle Projekte exportieren',
+            importJson: 'Aus JSON importieren',
+            backupDescription: 'Exportieren Sie Boards als JSON oder stellen Sie Projekte wieder her.'
         },
         // sidebar
         sidebar: {
             createProject: 'Neues Projekt erstellen',
             projectsList: 'Projekte',
+            importProject: 'JSON importieren',
+            exportProject: 'Projekt exportieren',
             noProjects: 'Keine Projekte erkannt',
             openSettings: 'Einstellungen öffnen',
             collapse: 'Seitenleiste zuklappen',
@@ -425,7 +454,11 @@ export const translations = {
                 projectSuffixUpdate: 'erfolgreich aktualisiert',
                 projectSuffixSuccess: 'erfolgreich erstellt',
                 taskPrefix: 'Aufgabe',
-                taskSuffixSuccess: 'erfolgreich hinzugefügt'
+                taskSuffixSuccess: 'erfolgreich hinzugefügt',
+                exportSuccess: 'Projekt erfolgreich exportiert',
+                backupSuccess: 'Alle Projekte erfolgreich exportiert',
+                importSuccess: 'Projekte erfolgreich importiert',
+                importFailed: 'Fehler beim Importieren der Projekte'
             }
         },
         // error

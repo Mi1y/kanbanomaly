@@ -8,6 +8,7 @@
     projectList, 
     selectedProjectId, 
     projectActions,
+    exportImportService,
     dataSource,
     type UnifiedCreateProjectData as CreateProjectData,
     type UnifiedUpdateProjectData as UpdateProjectData,
@@ -19,6 +20,36 @@
   let newProjectModalOpen = $state(false);
   let settingsModalOpen = $state(false);
   let projectToEdit: ProjectView | null = $state(null);
+  let fileInputElement: HTMLInputElement | undefined = $state();
+  
+  function triggerImport() {
+    fileInputElement?.click();
+  }
+
+  async function handleFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const count = await exportImportService.importFromJson(text);
+      toastActions.success(`${$translate.toasts.other.importSuccess}: ${count}`);
+    } catch {
+      toastActions.error($translate.toasts.other.importFailed);
+    } finally {
+      input.value = '';
+    }
+  }
+
+  async function exportProject(projectId: string) {
+    try {
+      await exportImportService.exportSingleProject(projectId);
+      toastActions.success($translate.toasts.other.exportSuccess);
+    } catch {
+      toastActions.error($translate.toasts.error.unexpected);
+    }
+  }
   
   function selectProject(projectId: string) {
     projectActions.select(projectId);
@@ -121,7 +152,7 @@
   </div>
 
   {#if showSidebar}
-    <div class="p-3">
+    <div class="p-3 space-y-2">
       <button 
         onclick={openNewProjectModal}
         class="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white text-xs font-medium px-3 py-2 rounded-md transition-all shadow-sm shadow-indigo-600/20"
@@ -131,6 +162,24 @@
         </svg>
         <span>{$translate.sidebar.createProject}</span>
       </button>
+
+      <button
+        onclick={triggerImport}
+        class="w-full flex items-center justify-center gap-2 bg-white/[0.03] hover:bg-white/[0.06] border border-white/5 text-zinc-300 hover:text-white text-xs font-medium px-3 py-1.5 rounded-md transition-all"
+        title={$translate.sidebar.importProject}
+      >
+        <svg class="w-3.5 h-3.5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+        </svg>
+        <span>{$translate.sidebar.importProject}</span>
+      </button>
+      <input
+        type="file"
+        accept=".json"
+        class="hidden"
+        bind:this={fileInputElement}
+        onchange={handleFileSelected}
+      />
     </div>
 
     <div class="flex-1 px-3 py-2 overflow-y-auto custom-scrollbar">
@@ -155,6 +204,16 @@
                 </button>
                 
                 <div class="hidden group-hover:flex items-center pr-1 shrink-0 gap-0.5">
+                  <button
+                    onclick={(e) => { e.stopPropagation(); exportProject(project.id); }}
+                    class="p-1 rounded text-zinc-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-colors"
+                    title={$translate.sidebar.exportProject}
+                    aria-label={$translate.sidebar.exportProject}
+                  >
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                  </button>
                   <button
                     onclick={(e) => { e.stopPropagation(); startEditProject(project); }}
                     class="p-1 rounded text-zinc-400 hover:text-zinc-200 hover:bg-white/10 transition-colors"
