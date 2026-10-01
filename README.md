@@ -8,7 +8,7 @@ Easily move tasks between columns, set due dates, and keep your workflow smooth 
 
 ## 🚀 Features
 
-- 📌 **Hybrid Storage:** Works completely offline out-of-the-box (local JSON files) or connects to your Supabase project.
+- 📌 **Hybrid Storage:** Works completely offline out-of-the-box (local JSON files) or connects to your Supabase project (ideal for teams collaborating on the same board).
 - ⏰ **Deadline & Progress Tracking:** Visual deadline bars and task status overviews.
 - 🎯 **Kanban Board:** Smooth drag-and-drop between Todo, Doing, and Done columns.
 - 💾 **Backup & Migration:** Export/import individual boards or full workspace backups to/from JSON.
