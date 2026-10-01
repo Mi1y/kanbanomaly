@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { base } from '$app/paths';
   import ProjectModal from '../modal/project_modal.svelte';
   import SettingsModal from '../modal/settings_modal.svelte';
   import { 
@@ -131,7 +132,7 @@
     {#if showSidebar}
       <div class="flex items-center gap-2.5 overflow-hidden pl-1">
         <div class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0">
-          <img src="/favicon.svg" alt="Kanbanomaly" class="w-7 h-7 object-contain" />
+          <img src="{base}/favicon.svg" alt="Kanbanomaly" class="w-7 h-7 object-contain" />
         </div>
         <span class="font-semibold text-sm tracking-tight text-zinc-100 truncate">Kanbanomaly</span>
       </div>

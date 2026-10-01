@@ -1,5 +1,6 @@
 <script lang="ts">
   import KanbanBoard from '../kanban_board.svelte';
+  import { base } from '$app/paths';
   import { translate, selectedProjectId } from '$lib';
 </script>
 
@@ -11,7 +12,7 @@
       <div class="flex-1 flex items-center justify-center">
         <div class="max-w-md w-full p-8 rounded-xl border border-white/5 bg-[#0d0f17] text-center shadow-xl shadow-black/20">
           <div class="w-14 h-14 mx-auto mb-4 rounded-xl flex items-center justify-center">
-            <img src="/favicon.svg" alt="Kanbanomaly" class="w-14 h-14 object-contain" />
+            <img src="{base}/favicon.svg" alt="Kanbanomaly" class="w-14 h-14 object-contain" />
           </div>
           <h2 class="text-base font-semibold text-zinc-100 mb-1.5 tracking-tight">
             {$translate.main.welcome}
