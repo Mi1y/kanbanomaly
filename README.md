@@ -11,7 +11,7 @@ Easily move tasks between columns, set due dates, and keep your workflow smooth 
 - 📌 **Hybrid Storage:** Works completely offline out-of-the-box (local JSON files) or connects to your Supabase project (ideal for teams collaborating on the same board).
 - ⏰ **Deadline & Progress Tracking:** Visual deadline bars and task status overviews.
 - 🎯 **Kanban Board:** Smooth drag-and-drop between Todo, Doing, and Done columns.
-- 💾 **Backup & Migration:** Export/import individual boards or full workspace backups to/from JSON.
+- 💾 **Backup & Migration:** Export/import individual boards or full workspace backups to/from JSON (ready-to-use sample dataset in `example/seed_import.json`).
 - 🌐 **Multi-language:** English, Polish, German.
 - 🖥️ **Desktop App:** Built with Tauri v2 and Svelte 5.
 
@@ -81,6 +81,19 @@ create table public.tasks (
   project_id uuid not null references projects(id) on delete cascade
 );
 ```
+
+---
+
+## 📥 Sample Data (Quick Start)
+
+Want to explore the app with pre-filled boards right away? Use the included sample data file:
+- **File**: [`example/seed_import.json`](example/seed_import.json)
+
+**How to import:**
+1. Open the application and click **Settings** (⚙️) at the bottom of the sidebar (or use the import icon in the sidebar).
+2. Under **Backup & Data**, click **Import JSON**.
+3. Select `example/seed_import.json`.
+4. Your boards will be immediately populated with sample projects and tasks!
 
 ---
 

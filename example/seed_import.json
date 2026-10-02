@@ -1,0 +1,241 @@
+{
+  "version": "2.0",
+  "exported_at": "2026-10-02T14:14:29.594Z",
+  "source": "local",
+  "projects": [
+    {
+      "id": "b86ebca1-762b-4625-bf30-f7d80b68d3cd",
+      "title": "Wedding Planning",
+      "status": "active",
+      "start_date": "2025-08-18T00:00:00.000Z",
+      "end_date": "2027-09-05T00:00:00.000Z",
+      "tasks": [
+        {
+          "id": "567a5899-3a75-4c64-b186-7ab3edb50e23",
+          "title": "Book venue",
+          "status": "done",
+          "level": "critical"
+        },
+        {
+          "id": "b06eacd8-86ab-4052-8649-087ac7f2876c",
+          "title": "Send invitations",
+          "status": "doing",
+          "level": "high"
+        },
+        {
+          "id": "2c82858c-2aa5-41c7-994c-a25b4e9f2cee",
+          "title": "Choose flowers",
+          "status": "todo",
+          "level": "medium"
+        },
+        {
+          "id": "7fb3daa9-bd6f-432f-b31d-43a96a7e4351",
+          "title": "Order wedding cake",
+          "status": "todo",
+          "level": "medium"
+        },
+        {
+          "id": "1f917124-b09e-43b3-9af9-c96038087d14",
+          "title": "Hire photographer",
+          "status": "doing",
+          "level": "high"
+        },
+        {
+          "id": "d11d7f58-0568-4b14-86d7-0f73220b2627",
+          "title": "Plan honeymoon",
+          "status": "todo",
+          "level": "low"
+        }
+      ]
+    },
+    {
+      "id": "f3279dbf-84e9-4ddf-b2f8-7083383041a2",
+      "title": "Family Vacation",
+      "status": "ended",
+      "start_date": "2026-08-15T00:00:00.000Z",
+      "end_date": "2026-08-22T00:00:00.000Z",
+      "tasks": [
+        {
+          "id": "685c43ae-1d0a-474f-bbc1-c94d5f6dc45d",
+          "title": "Book flights",
+          "status": "done",
+          "level": "critical"
+        },
+        {
+          "id": "63c9f438-63d5-4430-bf21-8219876f046f",
+          "title": "Reserve hotel",
+          "status": "done",
+          "level": "high"
+        },
+        {
+          "id": "b998e62c-5f7a-4a10-926f-897f2b6e876e",
+          "title": "Plan itinerary",
+          "status": "done",
+          "level": "medium"
+        },
+        {
+          "id": "69b8dd8a-ce48-417a-aabb-266b015e6ecb",
+          "title": "Pack luggage",
+          "status": "done",
+          "level": "low"
+        }
+      ]
+    },
+    {
+      "id": "308dea7e-47b7-4713-80d2-e8ed1e47e57b",
+      "title": "Home Renovation",
+      "status": "inactive",
+      "start_date": null,
+      "end_date": null,
+      "tasks": [
+        {
+          "id": "52c01aec-bf87-4e6b-a539-9cab0f69ca79",
+          "title": "Paint living room",
+          "status": "todo",
+          "level": "high"
+        },
+        {
+          "id": "e021e9e0-ae6c-4680-abc5-94475bfbc292",
+          "title": "Install new flooring",
+          "status": "todo",
+          "level": "medium"
+        },
+        {
+          "id": "cdd756c0-afe6-4505-b483-7e3c6e628139",
+          "title": "Update kitchen cabinets",
+          "status": "todo",
+          "level": "low"
+        },
+        {
+          "id": "072b9272-a1db-4579-b7ed-a4cf04f21607",
+          "title": "Bathroom renovation",
+          "status": "todo",
+          "level": "critical"
+        }
+      ]
+    },
+    {
+      "id": "28ec4da7-f1d6-4970-aeda-2f963df04ac0",
+      "title": "Website Launch",
+      "status": "ended",
+      "start_date": "2025-08-10T00:00:00.000Z",
+      "end_date": "2025-08-25T00:00:00.000Z",
+      "tasks": [
+        {
+          "id": "5d364804-4062-4624-876b-c5a70f173adf",
+          "title": "Domain registration",
+          "status": "done",
+          "level": "critical"
+        },
+        {
+          "id": "dc279f45-8fdd-4746-9b8c-8822b62e4435",
+          "title": "SSL certificate setup",
+          "status": "done",
+          "level": "high"
+        },
+        {
+          "id": "0e8cfe0a-e752-46a9-80e2-16271dd28347",
+          "title": "Content migration",
+          "status": "done",
+          "level": "medium"
+        },
+        {
+          "id": "dc8736bb-e7ab-4665-890f-c5fc66634db4",
+          "title": "SEO optimization",
+          "status": "done",
+          "level": "medium"
+        }
+      ]
+    },
+    {
+      "id": "01cf1e05-bbd3-4274-9f08-6c93a83f9c56",
+      "title": "Marketing Plan",
+      "status": "active",
+      "start_date": "2025-08-05T00:00:00.000Z",
+      "end_date": "2027-08-20T00:00:00.000Z",
+      "tasks": [
+        {
+          "id": "3da78e32-e6fc-4c18-be74-77c753d0405d",
+          "title": "Analyze target audience",
+          "status": "done",
+          "level": "high"
+        },
+        {
+          "id": "3f914a4e-a64b-4a1a-ab8b-34eb90b22632",
+          "title": "Create content calendar",
+          "status": "doing",
+          "level": "medium"
+        },
+        {
+          "id": "e9e58664-1f9b-430a-977e-ab6cc32e30fb",
+          "title": "Design social media posts",
+          "status": "todo",
+          "level": "medium"
+        },
+        {
+          "id": "e6e5116f-7b64-4adb-a0de-4104661d39cb",
+          "title": "Launch email campaign",
+          "status": "todo",
+          "level": "high"
+        },
+        {
+          "id": "3124ad3d-32d6-466c-b4fa-d8b57aef9843",
+          "title": "Setup Google Analytics",
+          "status": "done",
+          "level": "low"
+        }
+      ]
+    },
+    {
+      "id": "12932900-f36c-4ae0-a0ce-8dc7650e7db8",
+      "title": "Kanbanomaly",
+      "status": "active",
+      "start_date": "2025-08-02T00:00:00.000Z",
+      "end_date": "2026-08-15T00:00:00.000Z",
+      "tasks": [
+        {
+          "id": "680d36a6-e872-45bf-83de-6b6d56b40f39",
+          "title": "Design UI",
+          "status": "done",
+          "level": "high"
+        },
+        {
+          "id": "e5a4263a-4e79-4f5b-9dad-238683deb9b4",
+          "title": "Write documentation",
+          "status": "todo",
+          "level": "low"
+        },
+        {
+          "id": "e3ce02d7-f380-4e42-83a2-5f88dafd05a0",
+          "title": "Implement feature X",
+          "status": "doing",
+          "level": "medium"
+        },
+        {
+          "id": "f216e7ee-72e6-4a85-8ceb-8da6c89a323f",
+          "title": "Deploy to production",
+          "status": "todo",
+          "level": "critical"
+        },
+        {
+          "id": "09c0185b-53f0-4d8e-b845-44bed618dd89",
+          "title": "Setup Docker environment",
+          "status": "done",
+          "level": "high"
+        },
+        {
+          "id": "69279864-204a-46fc-9b4b-674f23dbffbf",
+          "title": "Create unit tests",
+          "status": "doing",
+          "level": "medium"
+        },
+        {
+          "id": "4c0d8f18-6a8e-4b5d-9548-fd2b42275a2f",
+          "title": "Fix mobile responsiveness",
+          "status": "todo",
+          "level": "high"
+        }
+      ]
+    }
+  ]
+}
